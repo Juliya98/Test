@@ -17,7 +17,7 @@ jobs:
         with:
           ref: gh-pages
 
-      - name: Rebuild portfolio from the last good Netlify deploy
+      - name: Copy portfolio from the last good Netlify deploy
         env:
           SOURCE_SITE: https://6aa8220a31be0638ce73408a--yulia-ugc.netlify.app
         run: |
@@ -25,50 +25,26 @@ jobs:
           find . -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +
           mkdir -p assets/images
 
-          curl -fL --retry 3 --retry-delay 2 "$SOURCE_SITE/" -o /tmp/source.html
+          curl -fL --retry 3 --retry-delay 2 "$SOURCE_SITE/" -o index.html
 
-          python - <<'PY'
-          import base64
-          import re
-          from pathlib import Path
+          images=(
+            hero-yulia.jpg
+            poster-autumn-capsule.jpg
+            poster-ai-stylist.jpg
+            poster-swimsuit.jpg
+            poster-tonic.jpg
+            poster-hair-test.jpg
+            poster-morning-habits.jpg
+            poster-masheri-green.jpg
+            poster-masheri-routine.jpg
+            poster-masheri-demo.jpg
+          )
 
-          html = Path('/tmp/source.html').read_text(encoding='utf-8')
-          pattern = re.compile(r'data:image/jpeg;base64,[A-Za-z0-9+/=]+')
-          found = pattern.findall(html)
-
-          unique = []
-          for uri in found:
-              if uri not in unique:
-                  unique.append(uri)
-
-          names = [
-              'hero-yulia.jpg',
-              'poster-autumn-capsule.jpg',
-              'poster-ai-stylist.jpg',
-              'poster-swimsuit.jpg',
-              'poster-tonic.jpg',
-              'poster-hair-test.jpg',
-              'poster-morning-habits.jpg',
-              'poster-masheri-green.jpg',
-              'poster-masheri-routine.jpg',
-              'poster-masheri-demo.jpg',
-          ]
-
-          if len(unique) != len(names):
-              raise SystemExit(f'Expected 10 unique embedded images, got {len(unique)}')
-
-          image_dir = Path('assets/images')
-          for uri, name in zip(unique, names):
-              raw = base64.b64decode(uri.split(',', 1)[1])
-              (image_dir / name).write_bytes(raw)
-              html = html.replace(uri, f'./assets/images/{name}')
-
-          if 'data:image/' in html:
-              raise SystemExit('Embedded image data remained after extraction')
-
-          html = html.replace('<!-- UGC portfolio v4-flat -->', '<!-- UGC portfolio · GitHub Pages -->')
-          Path('index.html').write_text(html, encoding='utf-8')
-          PY
+          for file in "${images[@]}"; do
+            echo "Downloading image $file"
+            curl -fL --retry 3 --retry-delay 2 "$SOURCE_SITE/assets/images/$file" -o "assets/images/$file"
+            test -s "assets/images/$file"
+          done
 
           videos=(
             autumn-capsule.mp4
@@ -83,7 +59,7 @@ jobs:
           )
 
           for file in "${videos[@]}"; do
-            echo "Downloading $file"
+            echo "Downloading video $file"
             curl -fL --retry 3 --retry-delay 2 "$SOURCE_SITE/$file" -o "$file"
             test -s "$file"
           done

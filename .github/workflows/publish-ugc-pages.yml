@@ -6,28 +6,24 @@ on:
     types: [opened]
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
-
-concurrency:
-  group: pages
-  cancel-in-progress: true
+  contents: write
 
 jobs:
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+  publish:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout gh-pages branch
+        uses: actions/checkout@v6
+        with:
+          ref: gh-pages
+
       - name: Rebuild portfolio from the last good Netlify deploy
         env:
           SOURCE_SITE: https://6aa8220a31be0638ce73408a--yulia-ugc.netlify.app
         run: |
           set -euo pipefail
-          rm -rf _site
-          mkdir -p _site/assets/images
+          find . -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +
+          mkdir -p assets/images
 
           curl -fL --retry 3 --retry-delay 2 "$SOURCE_SITE/" -o /tmp/source.html
 
@@ -61,7 +57,7 @@ jobs:
           if len(unique) != len(names):
               raise SystemExit(f'Expected 10 unique embedded images, got {len(unique)}')
 
-          image_dir = Path('_site/assets/images')
+          image_dir = Path('assets/images')
           for uri, name in zip(unique, names):
               raw = base64.b64decode(uri.split(',', 1)[1])
               (image_dir / name).write_bytes(raw)
@@ -71,7 +67,7 @@ jobs:
               raise SystemExit('Embedded image data remained after extraction')
 
           html = html.replace('<!-- UGC portfolio v4-flat -->', '<!-- UGC portfolio · GitHub Pages -->')
-          Path('_site/index.html').write_text(html, encoding='utf-8')
+          Path('index.html').write_text(html, encoding='utf-8')
           PY
 
           videos=(
@@ -88,18 +84,18 @@ jobs:
 
           for file in "${videos[@]}"; do
             echo "Downloading $file"
-            curl -fL --retry 3 --retry-delay 2 "$SOURCE_SITE/$file" -o "_site/$file"
-            test -s "_site/$file"
+            curl -fL --retry 3 --retry-delay 2 "$SOURCE_SITE/$file" -o "$file"
+            test -s "$file"
           done
 
-          touch _site/.nojekyll
+          touch .nojekyll
 
           python - <<'PY'
           from pathlib import Path
           import re
 
-          root = Path('_site')
-          html = (root / 'index.html').read_text(encoding='utf-8')
+          root = Path('.')
+          html = Path('index.html').read_text(encoding='utf-8')
           missing = []
           for path in re.findall(r'(?:src|data-poster|data-video)="([^"]+)"', html):
               if path.startswith(('http://', 'https://', 'mailto:', '#')):
@@ -117,16 +113,14 @@ jobs:
           print(f'Validated site: {len(videos)} videos, {len(images)} images, index.html OK')
           PY
 
-      - name: Configure GitHub Pages
-        uses: actions/configure-pages@v6
-        with:
-          enablement: true
-
-      - name: Upload GitHub Pages artifact
-        uses: actions/upload-pages-artifact@v4
-        with:
-          path: _site
-
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+      - name: Commit and publish
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No changes to publish"
+          else
+            git commit -m "Publish UGC portfolio"
+            git push origin gh-pages
+          fi

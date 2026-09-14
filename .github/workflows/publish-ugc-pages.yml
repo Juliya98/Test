@@ -1,0 +1,132 @@
+name: Publish UGC portfolio to GitHub Pages
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/publish-ugc-pages.yml'
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Rebuild portfolio from the last good Netlify deploy
+        env:
+          SOURCE_SITE: https://6aa8220a31be0638ce73408a--yulia-ugc.netlify.app
+        run: |
+          set -euo pipefail
+          rm -rf _site
+          mkdir -p _site/assets/images
+
+          curl -fL --retry 3 --retry-delay 2 "$SOURCE_SITE/" -o /tmp/source.html
+
+          python - <<'PY'
+          import base64
+          import re
+          from pathlib import Path
+
+          html = Path('/tmp/source.html').read_text(encoding='utf-8')
+          pattern = re.compile(r'data:image/jpeg;base64,[A-Za-z0-9+/=]+')
+          found = pattern.findall(html)
+
+          unique = []
+          for uri in found:
+              if uri not in unique:
+                  unique.append(uri)
+
+          names = [
+              'hero-yulia.jpg',
+              'poster-autumn-capsule.jpg',
+              'poster-ai-stylist.jpg',
+              'poster-swimsuit.jpg',
+              'poster-tonic.jpg',
+              'poster-hair-test.jpg',
+              'poster-morning-habits.jpg',
+              'poster-masheri-green.jpg',
+              'poster-masheri-routine.jpg',
+              'poster-masheri-demo.jpg',
+          ]
+
+          if len(unique) != len(names):
+              raise SystemExit(f'Expected 10 unique embedded images, got {len(unique)}')
+
+          image_dir = Path('_site/assets/images')
+          for uri, name in zip(unique, names):
+              raw = base64.b64decode(uri.split(',', 1)[1])
+              (image_dir / name).write_bytes(raw)
+              html = html.replace(uri, f'./assets/images/{name}')
+
+          if 'data:image/' in html:
+              raise SystemExit('Embedded image data remained after extraction')
+
+          html = html.replace('<!-- UGC portfolio v4-flat -->', '<!-- UGC portfolio · GitHub Pages -->')
+          Path('_site/index.html').write_text(html, encoding='utf-8')
+          PY
+
+          videos=(
+            autumn-capsule.mp4
+            ai-stylist.mp4
+            swimsuit.mp4
+            tonic.mp4
+            hair-test.mp4
+            morning-habits.mp4
+            masheri-green.mp4
+            masheri-routine.mp4
+            masheri-demo.mp4
+          )
+
+          for file in "${videos[@]}"; do
+            echo "Downloading $file"
+            curl -fL --retry 3 --retry-delay 2 "$SOURCE_SITE/$file" -o "_site/$file"
+            test -s "_site/$file"
+          done
+
+          touch _site/.nojekyll
+
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          root = Path('_site')
+          html = (root / 'index.html').read_text(encoding='utf-8')
+          missing = []
+          for path in re.findall(r'(?:src|data-poster|data-video)="([^"]+)"', html):
+              if path.startswith(('http://', 'https://', 'mailto:', '#')):
+                  continue
+              local = path[2:] if path.startswith('./') else path
+              if not (root / local).exists():
+                  missing.append(local)
+          if missing:
+              raise SystemExit(f'Missing site files: {sorted(set(missing))}')
+
+          videos = list(root.glob('*.mp4'))
+          images = list((root / 'assets/images').glob('*.jpg'))
+          if len(videos) != 9 or len(images) != 10:
+              raise SystemExit(f'Expected 9 videos and 10 images, got {len(videos)} videos and {len(images)} images')
+          print(f'Validated site: {len(videos)} videos, {len(images)} images, index.html OK')
+          PY
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v6
+
+      - name: Upload GitHub Pages artifact
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: _site
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

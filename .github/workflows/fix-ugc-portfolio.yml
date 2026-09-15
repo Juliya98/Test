@@ -27,14 +27,18 @@ jobs:
           for video,pid in posters.items():
               pat=re.compile(r'<video[^>]+src="\./'+re.escape(video)+r'#t=0\.1"></video>')
               s=pat.sub(f'<img id="{pid}" alt="UGC cover" decoding="async" loading="lazy" src="{fallback[pid]}"/>',s)
-          loaders='''<script src="./assets/embed/hero-yulia.js?v=8"></script>\n<script src="./assets/embed/poster-autumn-capsule.js?v=8"></script>\n<script src="./assets/embed/poster-ai-stylist.js?v=8"></script>\n<script src="./assets/embed/poster-swimsuit.js?v=8"></script>\n<script src="./assets/embed/poster-tonic.js?v=8"></script>\n<script src="./assets/embed/group-beauty.js?v=8"></script>\n'''
-          if 'hero-yulia.js?v=8' not in s:
+          loaders='''<script src="./assets/embed/hero-yulia.js?v=9"></script>\n<script src="./assets/embed/poster-autumn-capsule.js?v=9"></script>\n<script src="./assets/embed/poster-ai-stylist.js?v=9"></script>\n<script src="./assets/embed/poster-swimsuit.js?v=9"></script>\n<script src="./assets/embed/poster-tonic.js?v=9"></script>\n<script src="./assets/embed/group-beauty.js?v=9"></script>\n'''
+          if 'hero-yulia.js?v=9' not in s:
               s=s.replace('<script>\nconst filters',loaders+'<script>\nconst filters')
-          s=s.replace('<!-- UGC portfolio v4-flat -->','<!-- UGC portfolio v8 -->')
+          s=s.replace('<!-- UGC portfolio v4-flat -->','<!-- UGC portfolio v9 -->')
           p.write_text(s,encoding='utf-8')
           missing=[x for x in ['hero-img']+list(posters.values()) if f'id="{x}"' not in s]
           if missing: raise SystemExit('Missing image ids: '+str(missing))
           PY
+      - name: Install ffmpeg
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg
       - name: Improve videos
         run: |
           for f in autumn-capsule.mp4 ai-stylist.mp4 swimsuit.mp4 tonic.mp4 hair-test.mp4 morning-habits.mp4 masheri-green.mp4 masheri-routine.mp4 masheri-demo.mp4; do

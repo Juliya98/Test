@@ -13,45 +13,93 @@ jobs:
         with:
           ref: gh-pages
           fetch-depth: 1
-      - name: Restore images and covers
+
+      - name: Embed all portfolio images directly into HTML
         run: |
           python3 - <<'PY'
           from pathlib import Path
           import re
-          p=Path('index.html')
-          s=p.read_text(encoding='utf-8')
-          s=s.replace('<img alt="Юля — UGC-креатор" fetchpriority="high" loading="eager" src="./assets/images/hero-yulia.svg"/>','<img id="hero-img" alt="Юля — UGC-креатор" fetchpriority="high" loading="eager" src="./assets/images/hero-yulia.svg"/>')
-          posters={
-          'autumn-capsule.mp4':'poster-autumn-capsule','ai-stylist.mp4':'poster-ai-stylist','swimsuit.mp4':'poster-swimsuit','tonic.mp4':'poster-tonic','hair-test.mp4':'poster-hair-test','morning-habits.mp4':'poster-morning-habits','masheri-green.mp4':'poster-masheri-green','masheri-routine.mp4':'poster-masheri-routine','masheri-demo.mp4':'poster-masheri-demo'}
-          fallback={'poster-autumn-capsule':'./assets/images/poster-autumn-capsule.svg','poster-ai-stylist':'./assets/images/poster-autumn-capsule.svg','poster-swimsuit':'./assets/images/poster-swimsuit.svg','poster-tonic':'./assets/images/poster-swimsuit.svg','poster-hair-test':'./assets/images/poster-swimsuit.svg','poster-morning-habits':'./assets/images/poster-swimsuit.svg','poster-masheri-green':'./assets/images/poster-masheri-green.webp','poster-masheri-routine':'./assets/images/poster-masheri-routine.webp','poster-masheri-demo':'./assets/images/poster-masheri-demo.webp'}
-          for video,pid in posters.items():
-              pat=re.compile(r'<video[^>]+src="\./'+re.escape(video)+r'#t=0\.1"></video>')
-              s=pat.sub(f'<img id="{pid}" alt="UGC cover" decoding="async" loading="lazy" src="{fallback[pid]}"/>',s)
-          loaders='''<script src="./assets/embed/hero-yulia.js?v=9"></script>\n<script src="./assets/embed/poster-autumn-capsule.js?v=9"></script>\n<script src="./assets/embed/poster-ai-stylist.js?v=9"></script>\n<script src="./assets/embed/poster-swimsuit.js?v=9"></script>\n<script src="./assets/embed/poster-tonic.js?v=9"></script>\n<script src="./assets/embed/group-beauty.js?v=9"></script>\n'''
-          if 'hero-yulia.js?v=9' not in s:
-              s=s.replace('<script>\nconst filters',loaders+'<script>\nconst filters')
-          s=s.replace('<!-- UGC portfolio v4-flat -->','<!-- UGC portfolio v9 -->')
-          p.write_text(s,encoding='utf-8')
-          missing=[x for x in ['hero-img']+list(posters.values()) if f'id="{x}"' not in s]
-          if missing: raise SystemExit('Missing image ids: '+str(missing))
+
+          p = Path('index.html')
+          s = p.read_text(encoding='utf-8')
+
+          expected = {
+              'hero-img',
+              'poster-autumn-capsule',
+              'poster-ai-stylist',
+              'poster-swimsuit',
+              'poster-tonic',
+              'poster-hair-test',
+              'poster-morning-habits',
+              'poster-masheri-green',
+              'poster-masheri-routine',
+              'poster-masheri-demo',
+          }
+
+          image_map = {}
+          for js in Path('assets/embed').glob('*.js'):
+              text = js.read_text(encoding='utf-8')
+              for element_id, data_uri in re.findall(
+                  r"document\.getElementById\('([^']+)'\)\.src='(data:image/[^']+)'",
+                  text,
+              ):
+                  image_map[element_id] = data_uri
+
+          missing_sources = sorted(expected - image_map.keys())
+          if missing_sources:
+              raise SystemExit('Missing embedded image sources: ' + ', '.join(missing_sources))
+
+          for element_id in sorted(expected):
+              pattern = re.compile(
+                  r'(<img\b(?=[^>]*\bid="' + re.escape(element_id) + r'")[^>]*\bsrc=")[^"]*(")'
+              )
+              s, count = pattern.subn(
+                  lambda m, uri=image_map[element_id]: m.group(1) + uri + m.group(2),
+                  s,
+                  count=1,
+              )
+              if count != 1:
+                  raise SystemExit(f'Could not replace image src for {element_id}; count={count}')
+
+          # Remove JS image loaders: the images are now part of the HTML itself.
+          s = re.sub(
+              r'^<script src="\./assets/embed/[^\"]+\.js\?v=\d+"></script>\n?',
+              '',
+              s,
+              flags=re.MULTILINE,
+          )
+
+          # Keep videos hosted by GitHub Pages itself.
+          videos = [
+              'autumn-capsule.mp4', 'ai-stylist.mp4', 'swimsuit.mp4',
+              'tonic.mp4', 'hair-test.mp4', 'morning-habits.mp4',
+              'masheri-green.mp4', 'masheri-routine.mp4', 'masheri-demo.mp4',
+          ]
+          for video in videos:
+              if not Path(video).is_file():
+                  raise SystemExit('Missing video on gh-pages: ' + video)
+              if f'data-video="./{video}"' not in s:
+                  raise SystemExit('index.html does not reference local video: ' + video)
+
+          s = re.sub(r'<!-- UGC portfolio[^>]*-->', '<!-- UGC portfolio v10-direct-images -->', s, count=1)
+
+          if s.count('data:image/') < 10:
+              raise SystemExit('Expected at least 10 directly embedded images in index.html')
+          if 'assets/embed/' in s:
+              raise SystemExit('Image loader scripts still remain in index.html')
+
+          p.write_text(s, encoding='utf-8')
+          print('OK: embedded', len(expected), 'images directly into index.html')
           PY
-      - name: Install ffmpeg
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y ffmpeg
-      - name: Improve videos
-        run: |
-          for f in autumn-capsule.mp4 ai-stylist.mp4 swimsuit.mp4 tonic.mp4 hair-test.mp4 morning-habits.mp4 masheri-green.mp4 masheri-routine.mp4 masheri-demo.mp4; do
-            w=$(ffprobe -v error -select_streams v:0 -show_entries stream=width -of csv=p=0 "$f")
-            if [ "$w" -lt 700 ]; then
-              ffmpeg -y -hide_banner -loglevel error -i "$f" -vf "scale=720:1280:flags=lanczos,unsharp=5:5:0.45:5:5:0" -c:v libx264 -preset veryfast -crf 20 -pix_fmt yuv420p -movflags +faststart -c:a aac -b:a 128k "$f.new.mp4"
-              mv "$f.new.mp4" "$f"
-            fi
-          done
-      - name: Push changes
+
+      - name: Commit fixed page
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add index.html *.mp4
-          git commit -m "Fix hero, covers and video quality"
-          git push origin gh-pages
+          git add index.html
+          if git diff --cached --quiet; then
+            echo "No changes needed"
+          else
+            git commit -m "Embed portfolio images directly in page"
+            git push origin gh-pages
+          fi

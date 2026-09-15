@@ -14,7 +14,7 @@ jobs:
           ref: gh-pages
           fetch-depth: 1
 
-      - name: Embed all portfolio images directly into HTML
+      - name: Embed portfolio images directly into HTML
         run: |
           python3 - <<'PY'
           from pathlib import Path
@@ -23,6 +23,8 @@ jobs:
           p = Path('index.html')
           s = p.read_text(encoding='utf-8')
 
+          # These seven images are stored inside the existing JS loaders.
+          # The three MaSheri covers already exist as normal .webp files.
           expected = {
               'hero-img',
               'poster-autumn-capsule',
@@ -31,9 +33,6 @@ jobs:
               'poster-tonic',
               'poster-hair-test',
               'poster-morning-habits',
-              'poster-masheri-green',
-              'poster-masheri-routine',
-              'poster-masheri-demo',
           }
 
           image_map = {}
@@ -61,7 +60,7 @@ jobs:
               if count != 1:
                   raise SystemExit(f'Could not replace image src for {element_id}; count={count}')
 
-          # Remove JS image loaders: the images are now part of the HTML itself.
+          # JS image loaders are no longer needed after the data URIs are embedded.
           s = re.sub(
               r'^<script src="\./assets/embed/[^\"]+\.js\?v=\d+"></script>\n?',
               '',
@@ -69,7 +68,16 @@ jobs:
               flags=re.MULTILINE,
           )
 
-          # Keep videos hosted by GitHub Pages itself.
+          # Verify static MaSheri covers still exist.
+          for image in [
+              'assets/images/poster-masheri-green.webp',
+              'assets/images/poster-masheri-routine.webp',
+              'assets/images/poster-masheri-demo.webp',
+          ]:
+              if not Path(image).is_file():
+                  raise SystemExit('Missing static cover: ' + image)
+
+          # Keep all videos local to GitHub Pages.
           videos = [
               'autumn-capsule.mp4', 'ai-stylist.mp4', 'swimsuit.mp4',
               'tonic.mp4', 'hair-test.mp4', 'morning-habits.mp4',
@@ -83,13 +91,13 @@ jobs:
 
           s = re.sub(r'<!-- UGC portfolio[^>]*-->', '<!-- UGC portfolio v10-direct-images -->', s, count=1)
 
-          if s.count('data:image/') < 10:
-              raise SystemExit('Expected at least 10 directly embedded images in index.html')
+          if s.count('data:image/') < 7:
+              raise SystemExit('Expected seven directly embedded images in index.html')
           if 'assets/embed/' in s:
               raise SystemExit('Image loader scripts still remain in index.html')
 
           p.write_text(s, encoding='utf-8')
-          print('OK: embedded', len(expected), 'images directly into index.html')
+          print('OK: embedded 7 images directly; kept 3 static MaSheri covers')
           PY
 
       - name: Commit fixed page
@@ -100,6 +108,6 @@ jobs:
           if git diff --cached --quiet; then
             echo "No changes needed"
           else
-            git commit -m "Embed portfolio images directly in page"
+            git commit -m "Fix portfolio images on GitHub Pages"
             git push origin gh-pages
           fi

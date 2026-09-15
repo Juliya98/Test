@@ -1,1 +1,0 @@
-Image assets are generated for the UGC portfolio.

@@ -1,0 +1,131 @@
+name: Fix UGC portfolio images, covers and video quality
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/fix-ugc-portfolio.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  repair:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout published site
+        uses: actions/checkout@v6
+        with:
+          ref: gh-pages
+          fetch-depth: 1
+
+      - name: Restore hero photo and custom covers
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          p = Path('index.html')
+          s = p.read_text(encoding='utf-8')
+
+          # Main portrait: the image bytes are already stored in a small JS asset on gh-pages.
+          s = s.replace(
+              '<img alt="Юля — UGC-креатор" fetchpriority="high" loading="eager" src="./assets/images/hero-yulia.svg"/>',
+              '<img id="hero-img" alt="Юля — UGC-креатор" fetchpriority="high" loading="eager" src="./assets/images/hero-yulia.svg"/>'
+          )
+
+          posters = {
+              'autumn-capsule.mp4': ('poster-autumn-capsule', './assets/images/poster-autumn-capsule.svg'),
+              'ai-stylist.mp4': ('poster-ai-stylist', './assets/images/poster-autumn-capsule.svg'),
+              'swimsuit.mp4': ('poster-swimsuit', './assets/images/poster-swimsuit.svg'),
+              'tonic.mp4': ('poster-tonic', './assets/images/poster-swimsuit.svg'),
+              'hair-test.mp4': ('poster-hair-test', './assets/images/poster-swimsuit.svg'),
+              'morning-habits.mp4': ('poster-morning-habits', './assets/images/poster-swimsuit.svg'),
+              'masheri-green.mp4': ('poster-masheri-green', './assets/images/poster-masheri-green.webp'),
+              'masheri-routine.mp4': ('poster-masheri-routine', './assets/images/poster-masheri-routine.webp'),
+              'masheri-demo.mp4': ('poster-masheri-demo', './assets/images/poster-masheri-demo.webp'),
+          }
+
+          for video_name, (poster_id, fallback) in posters.items():
+              # Current temporary version uses the MP4 itself as the card preview. Replace it with a real image element.
+              pattern = re.compile(r'<video\s+aria-hidden="true"\s+muted\s+playsinline\s+preload="metadata"\s+src="\./' + re.escape(video_name) + r'#t=0\.1"></video>')
+              replacement = f'<img id="{poster_id}" alt="UGC cover" decoding="async" loading="lazy" src="{fallback}"/>'
+              s = pattern.sub(replacement, s)
+
+          # Load the actual compressed cover/portrait data. These files already exist on gh-pages.
+          loader_block = '''
+<script src="./assets/embed/hero-yulia.js?v=7"></script>
+<script src="./assets/embed/poster-autumn-capsule.js?v=7"></script>
+<script src="./assets/embed/poster-ai-stylist.js?v=7"></script>
+<script src="./assets/embed/poster-swimsuit.js?v=7"></script>
+<script src="./assets/embed/poster-tonic.js?v=7"></script>
+<script src="./assets/embed/group-beauty.js?v=7"></script>
+'''
+          if 'hero-yulia.js?v=7' not in s:
+              s = s.replace('<script>\nconst filters', loader_block + '<script>\nconst filters')
+
+          # Modal poster must use the displayed cover instead of a missing file path.
+          s = re.sub(
+              r"video\.poster\s*=\s*card\.dataset\.poster\s*\?[^;]+;",
+              "video.poster = card.querySelector('img')?.src || '';",
+              s
+          )
+
+          s = s.replace('<!-- UGC portfolio v4-flat -->', '<!-- UGC portfolio v7-images-covers-hd -->')
+          p.write_text(s, encoding='utf-8')
+
+          required = ['hero-img'] + [x[0] for x in posters.values()]
+          missing = [x for x in required if f'id="{x}"' not in s]
+          if missing:
+              raise SystemExit(f'Image IDs were not restored: {missing}')
+          print('Hero photo and 9 custom covers wired successfully')
+          PY
+
+      - name: Upgrade all portfolio videos to 720x1280 web HD
+        shell: bash
+        run: |
+          set -euo pipefail
+          videos=(
+            autumn-capsule.mp4
+            ai-stylist.mp4
+            swimsuit.mp4
+            tonic.mp4
+            hair-test.mp4
+            morning-habits.mp4
+            masheri-green.mp4
+            masheri-routine.mp4
+            masheri-demo.mp4
+          )
+
+          for f in "${videos[@]}"; do
+            test -s "$f"
+            width=$(ffprobe -v error -select_streams v:0 -show_entries stream=width -of csv=p=0 "$f")
+            height=$(ffprobe -v error -select_streams v:0 -show_entries stream=height -of csv=p=0 "$f")
+            echo "$f: ${width}x${height}"
+            if [ "$width" -lt 700 ]; then
+              ffmpeg -y -hide_banner -loglevel error -i "$f" \
+                -vf "scale=720:1280:flags=lanczos,unsharp=5:5:0.45:5:5:0" \
+                -c:v libx264 -preset veryfast -crf 20 -profile:v high -level 4.0 \
+                -pix_fmt yuv420p -movflags +faststart -c:a aac -b:a 128k \
+                "$f.new.mp4"
+              mv "$f.new.mp4" "$f"
+            fi
+          done
+
+          for f in "${videos[@]}"; do
+            dims=$(ffprobe -v error -select_streams v:0 -show_entries stream=width,height -of csv=s=x:p=0 "$f")
+            echo "$f -> $dims"
+            [ "$dims" = "720x1280" ] || { echo "Unexpected dimensions for $f: $dims"; exit 1; }
+          done
+
+      - name: Publish repaired site
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html *.mp4
+          git commit -m "Restore UGC photos and covers; improve video quality"
+          git push origin gh-pages

@@ -1,0 +1,1 @@
+document.getElementById('poster-swimsuit').src='./assets/images/poster-swimsuit.webp';

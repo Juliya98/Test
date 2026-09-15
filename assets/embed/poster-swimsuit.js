@@ -1,1 +1,1 @@
-document.getElementById('poster-swimsuit').src='./assets/images/poster-swimsuit.webp';
+// repairing swimsuit cover

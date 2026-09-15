@@ -1,113 +1,189 @@
-name: ugc-fix
+name: ugc-clean-rebuild
+
 on:
   push:
     branches:
       - main
+
 jobs:
-  fix:
+  rebuild:
     permissions:
       contents: write
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout published branch
+        uses: actions/checkout@v4
         with:
           ref: gh-pages
           fetch-depth: 1
 
-      - name: Embed portfolio images directly into HTML
+      - name: Install media tools
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ffmpeg
+
+      - name: Recover hero photo as a real JPEG
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import base64, re
+
+          candidates = [Path('assets/embed/hero-yulia.js'), Path('index.html')]
+          data = None
+          for path in candidates:
+              if not path.exists():
+                  continue
+              text = path.read_text(encoding='utf-8', errors='ignore')
+              m = re.search(r'data:image/jpeg;base64,([A-Za-z0-9+/=]+)', text)
+              if m:
+                  data = base64.b64decode(m.group(1), validate=True)
+                  break
+          if not data or not data.startswith(b'\xff\xd8\xff'):
+              raise SystemExit('Could not recover a valid JPEG hero image')
+          Path('/tmp/hero-yulia.jpg').write_bytes(data)
+          print('Recovered hero JPEG:', len(data), 'bytes')
+          PY
+          ffprobe -v error -select_streams v:0 -show_entries stream=width,height -of csv=p=0 /tmp/hero-yulia.jpg
+
+      - name: Rebuild all image assets from real files
+        run: |
+          rm -rf assets/embed assets/images
+          mkdir -p assets/images
+          cp /tmp/hero-yulia.jpg assets/images/hero-yulia-v12.jpg
+
+          make_poster() {
+            video="$1"
+            slug="$2"
+            duration=$(ffprobe -v error -show_entries format=duration -of default=nw=1:nk=1 "$video")
+            timestamp=$(awk -v d="$duration" 'BEGIN { t=d*0.22; if (t<0.4) t=0.4; if (t>d-0.15) t=d/2; printf "%.3f", t }')
+            echo "Poster $slug from $video at ${timestamp}s"
+            ffmpeg -y -hide_banner -loglevel error -ss "$timestamp" -i "$video" -frames:v 1 \
+              -vf "scale=720:1280:force_original_aspect_ratio=increase,crop=720:1280" \
+              -q:v 2 "assets/images/poster-${slug}-v12.jpg"
+            test -s "assets/images/poster-${slug}-v12.jpg"
+          }
+
+          make_poster autumn-capsule.mp4 autumn-capsule
+          make_poster ai-stylist.mp4 ai-stylist
+          make_poster swimsuit.mp4 swimsuit
+          make_poster tonic.mp4 tonic
+          make_poster hair-test.mp4 hair-test
+          make_poster morning-habits.mp4 morning-habits
+          make_poster masheri-green.mp4 masheri-green
+          make_poster masheri-routine.mp4 masheri-routine
+          make_poster masheri-demo.mp4 masheri-demo
+
+      - name: Write clean static site
+        run: |
+          cat > index.html <<'HTML'
+          <!doctype html>
+          <html lang="ru">
+          <head>
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+            <meta name="theme-color" content="#ece9e7">
+            <meta name="description" content="UGC-портфолио Юли: fashion и beauty. Сценарий, съёмка и монтаж.">
+            <title>Юля — UGC creator · Fashion & Beauty</title>
+            <!-- UGC CLEAN BUILD v12 · real JPG assets · no base64 · no image-loader JS -->
+            <style>
+              :root{--bg:#ece9e7;--surface:#f7f4f3;--surface2:#ded7d9;--ink:#201e20;--muted:#6d676a;--accent:#735963;--line:rgba(32,30,32,.14);--white:#fffaf8;--r:24px}
+              *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--ink);font-family:Arial,Helvetica,sans-serif;overflow-x:hidden}body.modal-open{overflow:hidden}a{color:inherit;text-decoration:none}button{font:inherit;color:inherit}img{display:block;max-width:100%}.wrap{width:min(1220px,calc(100% - 40px));margin:0 auto}.serif,h1,h2,h3,.brand-mark,.photo-tag strong{font-family:Georgia,"Times New Roman",serif}.eyebrow{font-size:11px;line-height:1.3;text-transform:uppercase;letter-spacing:.18em;color:var(--muted)}
+              header{position:sticky;top:0;z-index:50;background:rgba(236,233,231,.91);backdrop-filter:blur(14px);border-bottom:1px solid rgba(32,30,32,.08)}nav{height:68px;display:flex;align-items:center;justify-content:space-between;gap:20px}.brand{display:flex;align-items:center;gap:10px;font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase}.brand-mark{width:32px;height:32px;border:1px solid var(--ink);border-radius:50%;display:grid;place-items:center;font-size:14px}.nav-links{display:flex;align-items:center;gap:26px;font-size:12px}.nav-links a{color:#514c4f}.nav-contact{padding:9px 14px;border:1px solid var(--ink);border-radius:999px;font-size:12px}
+              .hero{padding:58px 0 84px}.hero-grid{display:grid;grid-template-columns:1.08fr .92fr;gap:56px;align-items:center}.hero-copy{padding:18px 0}.hero h1{font-size:clamp(50px,6.2vw,88px);font-weight:400;line-height:1.02;letter-spacing:-.04em;margin:18px 0 26px;max-width:790px}.hero h1 span{color:var(--accent)}.hero-lead{font-size:17px;line-height:1.7;color:#4e494c;max-width:620px;margin:0}.hero-points{display:flex;flex-wrap:wrap;gap:8px;margin-top:27px}.pill{border:1px solid var(--line);border-radius:999px;padding:9px 12px;font-size:11px;background:rgba(255,255,255,.2)}.hero-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:32px}.btn{min-height:46px;display:inline-flex;align-items:center;justify-content:center;padding:0 18px;border:1px solid var(--ink);border-radius:999px;font-size:12px;font-weight:700}.btn.primary{background:var(--ink);color:var(--white)}
+              .hero-photo{position:relative;min-height:650px;border-radius:28px;overflow:hidden;background:#c8c0bd}.hero-photo>img{width:100%;height:100%;position:absolute;inset:0;object-fit:cover;object-position:center 38%}.photo-tag{position:absolute;left:18px;bottom:18px;background:rgba(247,244,243,.92);backdrop-filter:blur(8px);border-radius:18px;padding:14px 16px;max-width:260px;font-size:12px;line-height:1.5}.photo-tag strong{font-weight:400;font-size:22px;display:block;margin-bottom:2px}
+              .divider{border-top:1px solid var(--line)}section.content{padding:102px 0}.section-top{display:grid;grid-template-columns:1fr .72fr;gap:35px;align-items:end;margin-bottom:42px}.section-top h2{font-size:clamp(44px,5vw,72px);line-height:1.05;letter-spacing:-.035em;font-weight:400;margin:10px 0 0}.section-top p{font-size:14px;line-height:1.75;color:var(--muted);margin:0;max-width:470px}.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px}.filter{border:1px solid var(--line);background:transparent;border-radius:999px;padding:9px 14px;font-size:11px;cursor:pointer}.filter.active{background:var(--ink);color:var(--white);border-color:var(--ink)}
+              .portfolio{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:15px}.work{position:relative;border:0;padding:0;background:#c9c2c4;border-radius:22px;overflow:hidden;aspect-ratio:9/16;cursor:pointer;text-align:left;isolation:isolate}.work[hidden]{display:none}.work>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .35s ease}.work:hover>img{transform:scale(1.025)}.work:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(20,18,19,.01) 42%,rgba(20,18,19,.88) 100%);z-index:1}.work-copy{position:absolute;z-index:2;left:17px;right:17px;bottom:17px;color:white}.work-copy small{display:block;font-size:9px;letter-spacing:.13em;text-transform:uppercase;opacity:.78;margin-bottom:7px}.work-copy h3{font-weight:400;font-size:23px;line-height:1.12;margin:0}.work-copy p{font-size:10px;line-height:1.45;margin:7px 0 0;opacity:.78}.play{position:absolute;z-index:3;right:13px;top:13px;height:38px;min-width:38px;padding:0 11px;border-radius:999px;background:rgba(247,244,243,.94);color:var(--ink);display:flex;align-items:center;justify-content:center;gap:6px;font-size:10px;font-weight:700}.play:before{content:"▶";font-size:9px}
+              .about{background:var(--ink);color:var(--bg)}.about-grid{display:grid;grid-template-columns:.85fr 1.15fr;gap:70px;align-items:start}.about .eyebrow{color:#aaa2a6}.about h2{font-size:clamp(48px,5.5vw,76px);line-height:1.05;letter-spacing:-.035em;font-weight:400;margin:12px 0 0}.about h2 span{color:#c0a7b1}.about-copy{font-size:16px;line-height:1.8;color:#d1cbce}.about-copy p{margin:0 0 20px}.about-copy strong{color:var(--white);font-weight:600}.quote{margin-top:36px;padding-top:22px;border-top:1px solid rgba(255,255,255,.18);font-family:Georgia,"Times New Roman",serif;font-size:25px;line-height:1.35;color:#eadfe3}
+              .formats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.format{background:var(--surface);border:1px solid var(--line);border-radius:21px;padding:24px;min-height:245px;display:flex;flex-direction:column}.format .num{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent)}.format h3{font-weight:400;font-size:28px;line-height:1.2;margin:auto 0 10px}.format p{font-size:12px;line-height:1.65;color:var(--muted);margin:0}
+              .contact{background:var(--surface2);padding:100px 0 34px}.contact-grid{display:grid;grid-template-columns:1.08fr .92fr;gap:45px;align-items:end}.contact h2{font-size:clamp(48px,5.8vw,82px);font-weight:400;line-height:1.02;letter-spacing:-.04em;margin:12px 0 0}.contact-side p{font-size:15px;line-height:1.75;color:var(--muted);margin:0 0 22px;max-width:470px}.contacts{display:flex;flex-wrap:wrap;gap:9px}.contact-link{display:inline-flex;align-items:center;padding:11px 15px;border:1px solid var(--ink);border-radius:999px;font-size:12px;font-weight:700}footer{margin-top:85px;padding-top:20px;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:20px;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+              .modal{position:fixed;inset:0;z-index:100;background:rgba(18,17,18,.86);backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;padding:18px}.modal.open{display:flex}.modal-card{width:min(460px,100%);max-height:94vh;background:#171617;border-radius:24px;overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,.38)}.modal-top{height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 15px;color:white;border-bottom:1px solid rgba(255,255,255,.1)}.modal-top strong{font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-right:12px}.close{border:1px solid rgba(255,255,255,.24);background:transparent;color:white;border-radius:999px;padding:7px 10px;font-size:10px;cursor:pointer}.modal video{display:block;width:100%;max-height:calc(94vh - 52px);background:#000;aspect-ratio:9/16;object-fit:contain}
+              @media(max-width:980px){.hero-grid,.section-top,.about-grid,.contact-grid{grid-template-columns:1fr}.hero-photo{min-height:620px;max-width:620px}.portfolio{grid-template-columns:repeat(3,1fr)}.formats-grid{grid-template-columns:repeat(2,1fr)}.about-grid{gap:35px}}
+              @media(max-width:720px){.wrap{width:min(100% - 28px,1220px)}nav{height:62px}.nav-links{display:none}.brand{font-size:11px}.hero{padding:31px 0 65px}.hero h1{font-size:46px}.hero-lead{font-size:15px}.hero-photo{min-height:520px;border-radius:22px}section.content{padding:76px 0}.section-top h2{font-size:45px}.portfolio{grid-template-columns:repeat(2,1fr);gap:10px}.work{border-radius:16px}.work-copy{left:12px;right:12px;bottom:12px}.work-copy h3{font-size:18px}.work-copy p{display:none}.play{top:10px;right:10px;height:32px;min-width:32px;padding:0 9px;font-size:9px}.about h2,.contact h2{font-size:46px}.about-copy{font-size:14px}.formats-grid{grid-template-columns:1fr}.format{min-height:210px}footer{margin-top:60px;flex-direction:column;gap:8px}.contact{padding-top:75px}}
+              @media(max-width:420px){.hero h1{font-size:40px}.hero-photo{min-height:470px}.work-copy h3{font-size:16px}}
+            </style>
+          </head>
+          <body>
+            <header><div class="wrap"><nav><a class="brand" href="#top"><span class="brand-mark">Ю</span><span>YULIA / UGC</span></a><div class="nav-links"><a href="#works">Ролики</a><a href="#about">Обо мне</a><a href="#formats">Что снимаю</a></div><a class="nav-contact" href="#contact">Написать</a></nav></div></header>
+            <main id="top">
+              <section class="hero"><div class="wrap hero-grid"><div class="hero-copy"><div class="eyebrow">UGC creator · fashion & beauty</div><h1>Снимаю то, что<br>сама хочу<br>увидеть <span>перед<br>покупкой.</span></h1><p class="hero-lead">Как сидит вещь. Как выглядит текстура. Что происходит в использовании. Без фраз, которые я бы сама пролистала.</p><div class="hero-points"><span class="pill">сценарий</span><span class="pill">съёмка</span><span class="pill">монтаж</span><span class="pill">talking head</span><span class="pill">voice-over</span></div><div class="hero-actions"><a class="btn primary" href="#works">Смотреть ролики ↓</a><a class="btn" href="#contact">Контакты</a></div></div><div class="hero-photo"><img src="./assets/images/hero-yulia-v12.jpg" alt="Юля — UGC-креатор" width="720" height="900" fetchpriority="high"><div class="photo-tag"><strong>Юля</strong>Одежда, beauty и привычка проверять всё на себе.</div></div></div></section>
+              <div class="divider"></div>
+              <section class="content" id="works"><div class="wrap"><div class="section-top"><div><div class="eyebrow">Портфолио</div><h2>Лучше покажу.</h2></div><p>Здесь мои готовые ролики. Есть примерка, talking head, voice-over, грин-скрин и тесты продукта — без одной и той же подачи на всё подряд.</p></div><div class="filters" aria-label="Фильтр работ"><button class="filter active" data-filter="all" type="button">Все</button><button class="filter" data-filter="fashion" type="button">Одежда</button><button class="filter" data-filter="beauty" type="button">Beauty</button></div><div class="portfolio">
+                <button class="work" data-category="fashion" data-title="Осенняя капсула" data-video="./autumn-capsule.mp4" data-poster="./assets/images/poster-autumn-capsule-v12.jpg" type="button"><img src="./assets/images/poster-autumn-capsule-v12.jpg" alt="Осенняя капсула — UGC" loading="lazy"><div class="play">00:43</div><div class="work-copy"><small>fashion · try-on</small><h3>Осенняя капсула</h3><p>Примерка и стилизация вещей в реальных образах.</p></div></button>
+                <button class="work" data-category="fashion" data-title="ИИ-стилист — три образа" data-video="./ai-stylist.mp4" data-poster="./assets/images/poster-ai-stylist-v12.jpg" type="button"><img src="./assets/images/poster-ai-stylist-v12.jpg" alt="ИИ-стилист — UGC" loading="lazy"><div class="play">00:58</div><div class="work-copy"><small>fashion · styling</small><h3>Отдала рубашку ИИ-стилисту</h3><p>Собрала три образа по подсказкам ИИ и проверила их на себе.</p></div></button>
+                <button class="work" data-category="fashion" data-title="Купальник в отпуск" data-video="./swimsuit.mp4" data-poster="./assets/images/poster-swimsuit-v12.jpg" type="button"><img src="./assets/images/poster-swimsuit-v12.jpg" alt="Купальник в отпуск — UGC" loading="lazy"><div class="play">00:05</div><div class="work-copy"><small>fashion · try-on</small><h3>Тот самый купальник в отпуск</h3><p>Короткий fashion-ролик с акцентом на посадку.</p></div></button>
+                <button class="work" data-category="beauty" data-title="Mineral Cosmetics — тоник" data-video="./tonic.mp4" data-poster="./assets/images/poster-tonic-v12.jpg" type="button"><img src="./assets/images/poster-tonic-v12.jpg" alt="Mineral Cosmetics — тоник" loading="lazy"><div class="play">00:53</div><div class="work-copy"><small>beauty · talking head</small><h3>Уход не начинается «когда-нибудь потом»</h3><p>Разговорный ролик про регулярный уход и барьер кожи.</p></div></button>
+                <button class="work" data-category="beauty" data-title="Beauty-эксперимент: волосы" data-video="./hair-test.mp4" data-poster="./assets/images/poster-hair-test-v12.jpg" type="button"><img src="./assets/images/poster-hair-test-v12.jpg" alt="Beauty-эксперимент: волосы" loading="lazy"><div class="play">00:56</div><div class="work-copy"><small>beauty · test</small><h3>Проверяю на мокрых волосах</h3><p>Не обещание на словах, а проверка прямо в кадре.</p></div></button>
+                <button class="work" data-category="beauty" data-title="5 утренних привычек" data-video="./morning-habits.mp4" data-poster="./assets/images/poster-morning-habits-v12.jpg" type="button"><img src="./assets/images/poster-morning-habits-v12.jpg" alt="5 утренних привычек" loading="lazy"><div class="play">00:38</div><div class="work-copy"><small>beauty · routine</small><h3>5 утренних привычек</h3><p>Продукт встроен в привычную утреннюю рутину.</p></div></button>
+                <button class="work" data-category="beauty" data-title="MaSheri — пилинг-варежка / storytelling" data-video="./masheri-green.mp4" data-poster="./assets/images/poster-masheri-green-v12.jpg" type="button"><img src="./assets/images/poster-masheri-green-v12.jpg" alt="MaSheri — storytelling" loading="lazy"><div class="play">00:59</div><div class="work-copy"><small>beauty · green screen</small><h3>Загар лёг ровно. До края одежды.</h3><p>История, визуальные вставки и продукт в использовании.</p></div></button>
+                <button class="work" data-category="beauty" data-title="MaSheri — гладкая кожа" data-video="./masheri-routine.mp4" data-poster="./assets/images/poster-masheri-routine-v12.jpg" type="button"><img src="./assets/images/poster-masheri-routine-v12.jpg" alt="MaSheri — гладкая кожа" loading="lazy"><div class="play">00:22</div><div class="work-copy"><small>beauty · visual routine</small><h3>А случилась гладкая кожа</h3><p>Без talking head: действия, продукт и результат.</p></div></button>
+                <button class="work" data-category="beauty" data-title="MaSheri — демонстрация продукта" data-video="./masheri-demo.mp4" data-poster="./assets/images/poster-masheri-demo-v12.jpg" type="button"><img src="./assets/images/poster-masheri-demo-v12.jpg" alt="MaSheri — демонстрация продукта" loading="lazy"><div class="play">00:46</div><div class="work-copy"><small>beauty · voice-over</small><h3>Показываю варежку в деле</h3><p>Материал, две стороны и сам процесс — крупно.</p></div></button>
+              </div></div></section>
+              <section class="content about" id="about"><div class="wrap about-grid"><div><div class="eyebrow">Обо мне</div><h2>Я Юля.<br>И да, я ещё <span>QA.</span></h2></div><div class="about-copy"><p>В работе это скорее плюс: я читаю ТЗ до конца, цепляюсь к деталям и могу десять раз пересобрать фразу, если <strong>в жизни так никто не говорит.</strong></p><p>В UGC мне нравится не просто снять красивый продукт, а найти одну понятную причину его рассмотреть: посадка вещи, текстура, способ использования, сравнение или результат.</p><div class="quote">«Я так не говорю» — вполне нормальная причина переписать сценарий.</div></div></div></section>
+              <section class="content" id="formats"><div class="wrap"><div class="section-top"><div><div class="eyebrow">Что беру на себя</div><h2>От идеи до готового ролика.</h2></div><p>Можно прийти с подробным ТЗ, а можно с продуктом и задачей. Дальше я собираю подачу под то, что действительно стоит показать в кадре.</p></div><div class="formats-grid"><article class="format"><div class="num">01 / сценарий</div><h3>Смысл до съёмки</h3><p>Хук, одна продающая мысль, логика ролика и текст без фраз, которые звучат как реклама.</p></article><article class="format"><div class="num">02 / съёмка</div><h3>Не одна говорящая голова</h3><p>Talking head, примерка, POV, руки, детали, текстура, использование продукта и нужные B-roll.</p></article><article class="format"><div class="num">03 / монтаж</div><h3>Темп без визуального шума</h3><p>Чистые склейки, субтитры, музыка и акценты там, где они действительно помогают досмотреть.</p></article></div></div></section>
+              <section class="contact" id="contact"><div class="wrap"><div class="contact-grid"><div><div class="eyebrow">Контакты</div><h2>Есть продукт?<br>Покажем его нормально.</h2></div><div class="contact-side"><p>Одежда и beauty — мои основные направления. Написать можно туда, где вам удобнее.</p><div class="contacts"><a class="contact-link" href="https://www.instagram.com/amoreun" target="_blank" rel="noopener">Instagram @amoreun ↗</a><a class="contact-link" href="https://t.me/amoreun" target="_blank" rel="noopener">Telegram @amoreun ↗</a><a class="contact-link" href="mailto:syomkina.iu@gmail.com">syomkina.iu@gmail.com ↗</a></div></div></div><footer><span>© 2026 YULIA / UGC</span><span>Fashion & Beauty · Екатеринбург</span></footer></div></section>
+            </main>
+            <div class="modal" id="videoModal" role="dialog" aria-modal="true" aria-hidden="true" aria-label="Просмотр ролика"><div class="modal-card"><div class="modal-top"><strong id="modalTitle">UGC</strong><button class="close" id="closeModal" type="button">Закрыть ✕</button></div><video id="modalVideo" controls playsinline preload="metadata"></video></div></div>
+            <script>
+              const filters=[...document.querySelectorAll('.filter')];
+              const works=[...document.querySelectorAll('.work')];
+              filters.forEach(btn=>btn.addEventListener('click',()=>{filters.forEach(x=>x.classList.remove('active'));btn.classList.add('active');const f=btn.dataset.filter;works.forEach(card=>{card.hidden=f!=='all'&&card.dataset.category!==f})}));
+              const modal=document.getElementById('videoModal'),video=document.getElementById('modalVideo'),title=document.getElementById('modalTitle'),closeBtn=document.getElementById('closeModal');
+              function openVideo(card){title.textContent=card.dataset.title||'UGC';video.pause();video.src=new URL(card.dataset.video,document.baseURI).href;video.poster=new URL(card.dataset.poster,document.baseURI).href;video.load();modal.classList.add('open');modal.setAttribute('aria-hidden','false');document.body.classList.add('modal-open');video.play().catch(()=>{});}
+              function closeVideo(){video.pause();video.removeAttribute('src');video.removeAttribute('poster');video.load();modal.classList.remove('open');modal.setAttribute('aria-hidden','true');document.body.classList.remove('modal-open');}
+              works.forEach(card=>card.addEventListener('click',()=>openVideo(card)));closeBtn.addEventListener('click',closeVideo);modal.addEventListener('click',e=>{if(e.target===modal)closeVideo()});document.addEventListener('keydown',e=>{if(e.key==='Escape'&&modal.classList.contains('open'))closeVideo()});
+            </script>
+          </body>
+          </html>
+          HTML
+
+      - name: Validate every attachment and reference
         run: |
           python3 - <<'PY'
           from pathlib import Path
           import re
 
-          p = Path('index.html')
-          s = p.read_text(encoding='utf-8')
+          html = Path('index.html').read_text(encoding='utf-8')
+          forbidden = ['data:image', 'assets/embed', '.svg', '.webp']
+          for token in forbidden:
+              if token in html:
+                  raise SystemExit(f'Forbidden legacy media reference remains: {token}')
 
-          # These seven images are stored inside the existing JS loaders.
-          # The three MaSheri covers already exist as normal .webp files.
-          expected = {
-              'hero-img',
-              'poster-autumn-capsule',
-              'poster-ai-stylist',
-              'poster-swimsuit',
-              'poster-tonic',
-              'poster-hair-test',
-              'poster-morning-habits',
-          }
+          img_refs = re.findall(r'<img[^>]+src="([^"]+)"', html)
+          video_refs = re.findall(r'data-video="([^"]+)"', html)
+          poster_refs = re.findall(r'data-poster="([^"]+)"', html)
+          if len(img_refs) != 10:
+              raise SystemExit(f'Expected 10 img refs, got {len(img_refs)}')
+          if len(video_refs) != 9 or len(poster_refs) != 9:
+              raise SystemExit(f'Expected 9 videos/posters, got {len(video_refs)}/{len(poster_refs)}')
 
-          image_map = {}
-          for js in Path('assets/embed').glob('*.js'):
-              text = js.read_text(encoding='utf-8')
-              for element_id, data_uri in re.findall(
-                  r"document\.getElementById\('([^']+)'\)\.src='(data:image/[^']+)'",
-                  text,
-              ):
-                  image_map[element_id] = data_uri
+          refs = set(img_refs + video_refs + poster_refs)
+          missing=[]
+          for ref in refs:
+              local = ref[2:] if ref.startswith('./') else ref
+              if not Path(local).is_file() or Path(local).stat().st_size == 0:
+                  missing.append(local)
+          if missing:
+              raise SystemExit('Missing referenced files: ' + ', '.join(sorted(missing)))
 
-          missing_sources = sorted(expected - image_map.keys())
-          if missing_sources:
-              raise SystemExit('Missing embedded image sources: ' + ', '.join(missing_sources))
-
-          for element_id in sorted(expected):
-              pattern = re.compile(
-                  r'(<img\b(?=[^>]*\bid="' + re.escape(element_id) + r'")[^>]*\bsrc=")[^"]*(")'
-              )
-              s, count = pattern.subn(
-                  lambda m, uri=image_map[element_id]: m.group(1) + uri + m.group(2),
-                  s,
-                  count=1,
-              )
-              if count != 1:
-                  raise SystemExit(f'Could not replace image src for {element_id}; count={count}')
-
-          # JS image loaders are no longer needed after the data URIs are embedded.
-          s = re.sub(
-              r'^<script src="\./assets/embed/[^\"]+\.js\?v=\d+"></script>\n?',
-              '',
-              s,
-              flags=re.MULTILINE,
-          )
-
-          # Verify static MaSheri covers still exist.
-          for image in [
-              'assets/images/poster-masheri-green.webp',
-              'assets/images/poster-masheri-routine.webp',
-              'assets/images/poster-masheri-demo.webp',
-          ]:
-              if not Path(image).is_file():
-                  raise SystemExit('Missing static cover: ' + image)
-
-          # Keep all videos local to GitHub Pages.
-          videos = [
-              'autumn-capsule.mp4', 'ai-stylist.mp4', 'swimsuit.mp4',
-              'tonic.mp4', 'hair-test.mp4', 'morning-habits.mp4',
-              'masheri-green.mp4', 'masheri-routine.mp4', 'masheri-demo.mp4',
-          ]
-          for video in videos:
-              if not Path(video).is_file():
-                  raise SystemExit('Missing video on gh-pages: ' + video)
-              if f'data-video="./{video}"' not in s:
-                  raise SystemExit('index.html does not reference local video: ' + video)
-
-          s = re.sub(r'<!-- UGC portfolio[^>]*-->', '<!-- UGC portfolio v10-direct-images -->', s, count=1)
-
-          if s.count('data:image/') < 7:
-              raise SystemExit('Expected seven directly embedded images in index.html')
-          if 'assets/embed/' in s:
-              raise SystemExit('Image loader scripts still remain in index.html')
-
-          p.write_text(s, encoding='utf-8')
-          print('OK: embedded 7 images directly; kept 3 static MaSheri covers')
+          print('HTML references OK:', len(img_refs), 'images,', len(video_refs), 'videos')
           PY
 
-      - name: Commit fixed page
+          for img in assets/images/*.jpg; do
+            dims=$(ffprobe -v error -select_streams v:0 -show_entries stream=width,height -of csv=p=0 "$img")
+            test -n "$dims" || { echo "Invalid image: $img"; exit 1; }
+            echo "OK image $img $dims"
+          done
+
+          for video in autumn-capsule.mp4 ai-stylist.mp4 swimsuit.mp4 tonic.mp4 hair-test.mp4 morning-habits.mp4 masheri-green.mp4 masheri-routine.mp4 masheri-demo.mp4; do
+            meta=$(ffprobe -v error -select_streams v:0 -show_entries stream=codec_name,width,height -of csv=p=0 "$video")
+            test -n "$meta" || { echo "Invalid video: $video"; exit 1; }
+            echo "OK video $video $meta"
+          done
+
+      - name: Commit clean rebuild
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add index.html
-          if git diff --cached --quiet; then
-            echo "No changes needed"
-          else
-            git commit -m "Fix portfolio images on GitHub Pages"
-            git push origin gh-pages
-          fi
+          git add -A
+          git commit -m "Clean rebuild UGC portfolio with real media files"
+          git push origin gh-pages

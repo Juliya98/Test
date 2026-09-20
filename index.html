@@ -70,6 +70,106 @@
     @media(max-width:980px){.portfolio{grid-template-columns:repeat(2,1fr)}.portfolio-heading,.about-grid,.about-bottom{grid-template-columns:1fr}.portfolio-heading,.about-grid,.about-bottom{gap:28px}}
     @media(max-width:720px){.portfolio-section{padding-top:28px}.portfolio-kicker,.about-kicker{font-size:9px;gap:14px}.portfolio-heading h2{font-size:47px}.portfolio-toolbar{align-items:flex-start;flex-direction:column;gap:10px}.portfolio-hint{display:none}.portfolio{grid-template-columns:repeat(2,1fr);gap:12px}.work{border-radius:18px}.about{padding:74px 0}.about h2{font-size:48px}.about-copy{font-size:15px}.about .quote{font-size:40px}.skill{grid-template-columns:1fr;gap:5px}.contact{padding-top:76px}}
 
+  
+    /* About block refinement · 2026-09-20 */
+    .about-bottom{
+      grid-template-columns:.78fr 1.22fr;
+      gap:34px;
+      align-items:stretch;
+      margin-top:38px;
+      padding-top:28px;
+    }
+    .quote-block{
+      min-height:220px;
+      border:1px solid rgba(255,255,255,.16);
+      border-radius:24px;
+      padding:26px 28px 24px;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      background:rgba(255,255,255,.025);
+    }
+    .quote-mark{
+      font-family:Georgia,"Times New Roman",serif;
+      font-size:58px;
+      line-height:.7;
+      color:#caa4b3;
+      opacity:.95;
+    }
+    .about .quote{
+      margin:14px 0 16px;
+      padding:0;
+      border:0;
+      font-size:clamp(34px,3.35vw,52px);
+      line-height:1.03;
+      letter-spacing:-.035em;
+      font-style:italic;
+      color:#d3a8b8;
+    }
+    .quote-note{
+      max-width:360px;
+      font-size:12px;
+      line-height:1.65;
+      color:#a99da1;
+    }
+    .skill-cards{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:14px;
+    }
+    .skill-card{
+      min-height:220px;
+      border:1px solid rgba(255,255,255,.16);
+      border-radius:24px;
+      padding:22px 20px 21px;
+      background:rgba(255,255,255,.025);
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+    }
+    .skill-card-top{
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+    .skill-num{
+      width:30px;
+      height:30px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.22);
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      flex:0 0 auto;
+      font-size:9px;
+      letter-spacing:.08em;
+      color:#caa4b3;
+    }
+    .skill-card b{
+      font-size:10px;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+      color:#fff;
+    }
+    .skill-card p{
+      margin:26px 0 0;
+      font-size:14px;
+      line-height:1.65;
+      color:#d4c9cd;
+    }
+    @media(max-width:1100px){
+      .about-bottom{grid-template-columns:1fr}
+      .quote-block{min-height:190px}
+    }
+    @media(max-width:760px){
+      .skill-cards{grid-template-columns:1fr}
+      .quote-block,.skill-card{min-height:auto}
+      .quote-block{padding:22px}
+      .skill-card{padding:20px}
+      .about .quote{font-size:38px}
+      .quote-note{max-width:none}
+    }
+
   </style>
 </head>
 <body>
@@ -103,11 +203,24 @@
         </div>
       </div>
       <div class="about-bottom">
-        <div class="quote">«Я так не говорю»</div>
-        <div class="skills">
-          <div class="skill"><b>Инструменты</b><span>Canva · CapCut · ChatGPT · Claude · Kling</span></div>
-          <div class="skill"><b>AI</b><span>Генерирую сценарии с ИИ, пишу их сама и при необходимости подключаю AI-видео.</span></div>
-          <div class="skill"><b>В работе</b><span>Сценарий с нуля · работа по ТЗ · съёмка · монтаж · правки · обратная связь · соблюдение сроков.</span></div>
+        <div class="quote-block">
+          <div class="quote-mark">“</div>
+          <div class="quote">Я так не говорю</div>
+          <div class="quote-note">Если фраза звучит неестественно — переписываю, пока она не станет живой.</div>
+        </div>
+        <div class="skill-cards">
+          <article class="skill-card">
+            <div class="skill-card-top"><span class="skill-num">01</span><b>Инструменты</b></div>
+            <p>Canva · CapCut · ChatGPT · Claude · Kling</p>
+          </article>
+          <article class="skill-card">
+            <div class="skill-card-top"><span class="skill-num">02</span><b>AI</b></div>
+            <p>Генерирую сценарии с ИИ, пишу их сама и при необходимости подключаю AI-видео.</p>
+          </article>
+          <article class="skill-card">
+            <div class="skill-card-top"><span class="skill-num">03</span><b>В работе</b></div>
+            <p>Сценарий с нуля · работа по ТЗ · съёмка · монтаж · правки · обратная связь · соблюдение сроков.</p>
+          </article>
         </div>
       </div>
     </div></section>

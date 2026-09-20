@@ -22,6 +22,54 @@
     @media(max-width:980px){.hero-grid,.section-top,.about-grid,.contact-grid{grid-template-columns:1fr}.hero-photo{min-height:620px;max-width:620px}.portfolio{grid-template-columns:repeat(3,1fr)}.formats-grid{grid-template-columns:repeat(2,1fr)}.about-grid{gap:35px}}
     @media(max-width:720px){.wrap{width:min(100% - 28px,1220px)}nav{height:62px}.nav-links{display:none}.brand{font-size:11px}.hero{padding:31px 0 65px}.hero h1{font-size:46px}.hero-lead{font-size:15px}.hero-photo{min-height:520px;border-radius:22px}section.content{padding:76px 0}.section-top h2{font-size:45px}.portfolio{grid-template-columns:repeat(2,1fr);gap:10px}.work{border-radius:16px}.work-copy{left:12px;right:12px;bottom:12px}.work-copy h3{font-size:18px}.work-copy p{display:none}.play{top:10px;right:10px;height:32px;min-width:32px;padding:0 9px;font-size:9px}.about h2,.contact h2{font-size:46px}.about-copy{font-size:14px}.formats-grid{grid-template-columns:1fr}.format{min-height:210px}footer{margin-top:60px;flex-direction:column;gap:8px}.contact{padding-top:75px}}
     @media(max-width:420px){.hero h1{font-size:40px}.hero-photo{min-height:470px}.work-copy h3{font-size:16px}}
+  
+    /* GitHub visual update · 2026-09-20 */
+    .portfolio-section{background:var(--surface);padding-top:34px}
+    .portfolio-shell{border-top:1px solid var(--line);padding-top:15px}
+    .portfolio-kicker,.about-kicker{display:flex;justify-content:space-between;gap:24px;font-size:10px;letter-spacing:.17em;text-transform:uppercase;color:var(--muted);margin-bottom:24px}
+    .portfolio-heading{grid-template-columns:1fr .86fr;margin-bottom:28px}
+    .portfolio-heading h2{font-size:clamp(54px,6.2vw,88px);line-height:.98;letter-spacing:-.045em;margin:0}
+    .portfolio-heading h2 span{font-style:italic;color:var(--accent)}
+    .portfolio-heading p{font-size:15px;line-height:1.8;max-width:520px}
+    .portfolio-toolbar{display:flex;justify-content:space-between;align-items:center;gap:24px;border-bottom:1px solid var(--line);padding-bottom:17px;margin-bottom:28px}
+    .portfolio-toolbar .filters{margin:0;gap:5px}
+    .portfolio-toolbar .filter{border:0;border-radius:0;padding:11px 14px;font-size:13px}
+    .portfolio-toolbar .filter.active{background:var(--ink);color:var(--white)}
+    .portfolio-hint{font-size:10px;letter-spacing:.17em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
+    .portfolio{grid-template-columns:repeat(3,minmax(0,1fr));gap:22px}
+    .work{border-radius:26px;box-shadow:0 12px 32px rgba(33,31,33,.08)}
+    .work-copy{left:20px;right:20px;bottom:20px}
+    .work-copy h3{font-size:26px}
+    .work-copy p{font-size:11px;max-width:90%}
+
+    .about{padding:96px 0;background:#171416;color:#f7f1f3}
+    .about-shell{border-top:1px solid rgba(255,255,255,.18);padding-top:15px}
+    .about-kicker{color:#b8adb1;margin-bottom:34px}
+    .about-grid{grid-template-columns:.92fr 1.08fr;gap:76px}
+    .about h2{font-size:clamp(56px,6.4vw,92px);line-height:.98;letter-spacing:-.045em;margin:0}
+    .about h2 span{color:#caa4b3}
+    .about-copy{font-size:17px;line-height:1.82;color:#d4c9cd}
+    .about-copy p{margin:0 0 19px}
+    .about-bottom{display:grid;grid-template-columns:.86fr 1.14fr;gap:76px;margin-top:34px;padding-top:28px;border-top:1px solid rgba(255,255,255,.18)}
+    .about .quote{margin:0;padding:0;border:0;font-size:clamp(40px,4vw,66px);line-height:1;font-style:italic;color:#caa4b3}
+    .skills{display:grid;gap:16px}
+    .skill{display:grid;grid-template-columns:150px 1fr;gap:22px;font-size:14px;line-height:1.7;color:#d4c9cd}
+    .skill b{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:#fff}
+
+    .contact{background:#171416;color:#f7f1f3;padding:98px 0 34px}
+    .contact .eyebrow{color:#aca0a4}
+    .contact h2 span{color:#caa4b3}
+    .contact-side p{color:#d0c5c9}
+    .contact-extra{font-size:13px;line-height:1.6;color:#e1d5d9;margin:0 0 20px}
+    .contacts{gap:10px}
+    .contact-link{border-color:rgba(255,255,255,.38);color:#f7f1f3;padding:10px 14px;gap:9px}
+    .contact-link:hover{background:#f7f1f3;color:#171416}
+    .contact-badge{display:inline-flex;align-items:center;justify-content:center;min-width:34px;height:24px;padding:0 7px;border-radius:999px;background:rgba(255,255,255,.09);font-size:9px;letter-spacing:.08em}
+    .contact footer{border-top-color:rgba(255,255,255,.16);color:#9f9397}
+
+    @media(max-width:980px){.portfolio{grid-template-columns:repeat(2,1fr)}.portfolio-heading,.about-grid,.about-bottom{grid-template-columns:1fr}.portfolio-heading,.about-grid,.about-bottom{gap:28px}}
+    @media(max-width:720px){.portfolio-section{padding-top:28px}.portfolio-kicker,.about-kicker{font-size:9px;gap:14px}.portfolio-heading h2{font-size:47px}.portfolio-toolbar{align-items:flex-start;flex-direction:column;gap:10px}.portfolio-hint{display:none}.portfolio{grid-template-columns:repeat(2,1fr);gap:12px}.work{border-radius:18px}.about{padding:74px 0}.about h2{font-size:48px}.about-copy{font-size:15px}.about .quote{font-size:40px}.skill{grid-template-columns:1fr;gap:5px}.contact{padding-top:76px}}
+
   </style>
 </head>
 <body>
@@ -29,7 +77,11 @@
   <main id="top">
     <section class="hero"><div class="wrap hero-grid"><div class="hero-copy"><div class="eyebrow">UGC creator · fashion & beauty</div><h1>Снимаю то, что<br>сама хочу<br>увидеть <span>перед<br>покупкой.</span></h1><p class="hero-lead">Как сидит вещь. Как выглядит текстура. Что происходит в использовании. Без фраз, которые я бы сама пролистала.</p><div class="hero-points"><span class="pill">сценарий</span><span class="pill">съёмка</span><span class="pill">монтаж</span><span class="pill">talking head</span><span class="pill">voice-over</span></div><div class="hero-actions"><a class="btn primary" href="#works">Смотреть ролики ↓</a><a class="btn" href="#contact">Контакты</a></div></div><div class="hero-photo"><img src="./assets/images/hero-yulia-v12.jpg" alt="Юля — UGC-креатор" width="720" height="900" fetchpriority="high"><div class="photo-tag"><strong>Юля</strong>Одежда, beauty и привычка проверять всё на себе.</div></div></div></section>
     <div class="divider"></div>
-    <section class="content" id="works"><div class="wrap"><div class="section-top"><div><div class="eyebrow">Портфолио</div><h2>Лучше покажу.</h2></div><p>Здесь мои готовые ролики. Есть примерка, talking head, voice-over, грин-скрин и тесты продукта — без одной и той же подачи на всё подряд.</p></div><div class="filters" aria-label="Фильтр работ"><button class="filter active" data-filter="all" type="button">Все</button><button class="filter" data-filter="fashion" type="button">Одежда</button><button class="filter" data-filter="beauty" type="button">Beauty</button></div><div class="portfolio">
+    <section class="content portfolio-section" id="works"><div class="wrap portfolio-shell">
+      <div class="portfolio-kicker"><span>01 / ПОРТФОЛИО</span><span>ОДЕЖДА + BEAUTY</span></div>
+      <div class="section-top portfolio-heading"><div><h2>Лучше <span>покажу.</span></h2></div><p>Здесь мои готовые ролики: примерка, talking head, voice-over, грин-скрин и тесты продукта. Под каждую задачу — своя подача, а не один шаблон на всё.</p></div>
+      <div class="portfolio-toolbar"><div class="filters" aria-label="Фильтр работ"><button class="filter active" data-filter="all" type="button">Все</button><button class="filter" data-filter="fashion" type="button">Одежда</button><button class="filter" data-filter="beauty" type="button">Beauty</button></div><div class="portfolio-hint">ОДНА ИДЕЯ — СВОЯ ПОДАЧА</div></div>
+      <div class="portfolio">
       <button class="work" data-category="fashion" data-title="Осенняя капсула" data-video="./autumn-capsule.mp4" data-poster="./assets/images/poster-autumn-capsule-v12.jpg" type="button"><img src="./assets/images/poster-autumn-capsule-v12.jpg" alt="Осенняя капсула — UGC" loading="lazy"><div class="play">00:43</div><div class="work-copy"><small>fashion · try-on</small><h3>Осенняя капсула</h3><p>Примерка и стилизация вещей в реальных образах.</p></div></button>
       <button class="work" data-category="fashion" data-title="ИИ-стилист — три образа" data-video="./ai-stylist.mp4" data-poster="./assets/images/poster-ai-stylist-v12.jpg" type="button"><img src="./assets/images/poster-ai-stylist-v12.jpg" alt="ИИ-стилист — UGC" loading="lazy"><div class="play">00:58</div><div class="work-copy"><small>fashion · styling</small><h3>Отдала рубашку ИИ-стилисту</h3><p>Собрала три образа по подсказкам ИИ и проверила их на себе.</p></div></button>
       <button class="work" data-category="fashion" data-title="Купальник в отпуск" data-video="./swimsuit.mp4" data-poster="./assets/images/poster-swimsuit-v12.jpg" type="button"><img src="./assets/images/poster-swimsuit-v12.jpg" alt="Купальник в отпуск — UGC" loading="lazy"><div class="play">00:05</div><div class="work-copy"><small>fashion · try-on</small><h3>Тот самый купальник в отпуск</h3><p>Короткий fashion-ролик с акцентом на посадку.</p></div></button>
@@ -40,9 +92,41 @@
       <button class="work" data-category="beauty" data-title="MaSheri — гладкая кожа" data-video="./masheri-routine.mp4" data-poster="./assets/images/poster-masheri-routine-v12.jpg" type="button"><img src="./assets/images/poster-masheri-routine-v12.jpg" alt="MaSheri — гладкая кожа" loading="lazy"><div class="play">00:22</div><div class="work-copy"><small>beauty · visual routine</small><h3>А случилась гладкая кожа</h3><p>Без talking head: действия, продукт и результат.</p></div></button>
       <button class="work" data-category="beauty" data-title="MaSheri — демонстрация продукта" data-video="./masheri-demo.mp4" data-poster="./assets/images/poster-masheri-demo-v12.jpg" type="button"><img src="./assets/images/poster-masheri-demo-v12.jpg" alt="MaSheri — демонстрация продукта" loading="lazy"><div class="play">00:46</div><div class="work-copy"><small>beauty · voice-over</small><h3>Показываю варежку в деле</h3><p>Материал, две стороны и сам процесс — крупно.</p></div></button>
     </div></div></section>
-    <section class="content about" id="about"><div class="wrap about-grid"><div><div class="eyebrow">Обо мне</div><h2>Я Юля.<br>И да, я ещё <span>QA.</span></h2></div><div class="about-copy"><p>В работе это скорее плюс: я читаю ТЗ до конца, цепляюсь к деталям и могу десять раз пересобрать фразу, если <strong>в жизни так никто не говорит.</strong></p><p>В UGC мне нравится не просто снять красивый продукт, а найти одну понятную причину его рассмотреть: посадка вещи, текстура, способ использования, сравнение или результат.</p><div class="quote">«Я так не говорю» — вполне нормальная причина переписать сценарий.</div></div></div></section>
+    <section class="content about" id="about"><div class="wrap about-shell">
+      <div class="about-kicker"><span>02 / ОБО МНЕ</span><span>ЧУТЬ БОЛЬШЕ, ЧЕМ В КАДРЕ</span></div>
+      <div class="about-grid">
+        <div><h2>Я Юля.<br>И да, я ещё <span>QA.</span></h2></div>
+        <div class="about-copy">
+          <p>В работе это скорее плюс: я читаю ТЗ до конца, цепляюсь к деталям и могу десять раз пересобрать фразу, если <strong>в жизни так никто не говорит.</strong></p>
+          <p>В UGC мне нравится не просто снять красивый продукт, а найти одну понятную причину его рассмотреть: посадка вещи, текстура, способ использования, сравнение или результат.</p>
+          <p>Спокойно принимаю обратную связь, нормально отношусь к правкам и стараюсь сдавать работу в согласованный срок.</p>
+        </div>
+      </div>
+      <div class="about-bottom">
+        <div class="quote">«Я так не говорю»</div>
+        <div class="skills">
+          <div class="skill"><b>Инструменты</b><span>Canva · CapCut · ChatGPT · Claude · Kling</span></div>
+          <div class="skill"><b>AI</b><span>Генерирую сценарии с ИИ, пишу их сама и при необходимости подключаю AI-видео.</span></div>
+          <div class="skill"><b>В работе</b><span>Сценарий с нуля · работа по ТЗ · съёмка · монтаж · правки · обратная связь · соблюдение сроков.</span></div>
+        </div>
+      </div>
+    </div></section>
     <section class="content" id="formats"><div class="wrap"><div class="section-top"><div><div class="eyebrow">Что беру на себя</div><h2>От идеи до готового ролика.</h2></div><p>Можно прийти с подробным ТЗ, а можно с продуктом и задачей. Дальше я собираю подачу под то, что действительно стоит показать в кадре.</p></div><div class="formats-grid"><article class="format"><div class="num">01 / сценарий</div><h3>Смысл до съёмки</h3><p>Хук, одна продающая мысль, логика ролика и текст без фраз, которые звучат как реклама.</p></article><article class="format"><div class="num">02 / съёмка</div><h3>Не одна говорящая голова</h3><p>Talking head, примерка, POV, руки, детали, текстура, использование продукта и нужные B-roll.</p></article><article class="format"><div class="num">03 / монтаж</div><h3>Темп без визуального шума</h3><p>Чистые склейки, субтитры, музыка и акценты там, где они действительно помогают досмотреть.</p></article></div></div></section>
-    <section class="contact" id="contact"><div class="wrap"><div class="contact-grid"><div><div class="eyebrow">Контакты</div><h2>Есть продукт?<br>Покажем его нормально.</h2></div><div class="contact-side"><p>Одежда и beauty — мои основные направления. Написать можно туда, где вам удобнее.</p><div class="contacts"><a class="contact-link" href="https://www.instagram.com/amoreun" target="_blank" rel="noopener">Instagram @amoreun ↗</a><a class="contact-link" href="https://t.me/amoreun" target="_blank" rel="noopener">Telegram @amoreun ↗</a><a class="contact-link" href="mailto:syomkina.iu@gmail.com">syomkina.iu@gmail.com ↗</a></div></div></div><footer><span>© 2026 YULIA / UGC</span><span>Fashion & Beauty · Екатеринбург</span></footer></div></section>
+    <section class="contact" id="contact"><div class="wrap">
+      <div class="contact-grid">
+        <div><div class="eyebrow">КОНТАКТЫ</div><h2>Есть задача?<br><span>Давайте обсудим.</span></h2></div>
+        <div class="contact-side">
+          <p>Можно прислать ТЗ, ссылку на продукт или коротко описать, что нужно. Отвечу и предложу формат.</p>
+          <div class="contact-extra">Работаю в срок, по запросу вношу правки и спокойно отношусь к обратной связи.</div>
+          <div class="contacts">
+            <a class="contact-link" href="https://t.me/amoreun" target="_blank" rel="noopener"><span class="contact-badge">TG</span><span>Telegram @amoreun ↗</span></a>
+            <a class="contact-link" href="https://www.instagram.com/amoreun" target="_blank" rel="noopener"><span class="contact-badge">IG</span><span>Instagram @amoreun ↗</span></a>
+            <a class="contact-link" href="mailto:syomkina.iu@gmail.com"><span class="contact-badge">MAIL</span><span>syomkina.iu@gmail.com ↗</span></a>
+          </div>
+        </div>
+      </div>
+      <footer><span>© 2026 YULIA / UGC</span><span>Fashion & Beauty · Екатеринбург</span></footer>
+    </div></section>
   </main>
   <div class="modal" id="videoModal" role="dialog" aria-modal="true" aria-hidden="true" aria-label="Просмотр ролика"><div class="modal-card"><div class="modal-top"><strong id="modalTitle">UGC</strong><button class="close" id="closeModal" type="button">Закрыть ✕</button></div><video id="modalVideo" controls playsinline preload="metadata"></video></div></div>
   <script>

@@ -38,6 +38,9 @@
     .portfolio-hint{font-size:10px;letter-spacing:.17em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
     .portfolio{grid-template-columns:repeat(3,minmax(0,1fr));gap:22px}
     .work{border-radius:26px}
+    .portfolio-more{display:flex;justify-content:center;margin-top:32px}
+    .show-more{min-width:220px;min-height:48px;border:1px solid var(--ink);border-radius:999px;background:transparent;color:var(--ink);padding:0 22px;font-size:12px;font-weight:700;cursor:pointer;transition:background .2s ease,color .2s ease}
+    .show-more:hover,.show-more:focus-visible{background:var(--ink);color:var(--white)}
 
     .about{padding:96px 0;background:#171416;color:#f7f1f3}
     .about-shell{border-top:1px solid rgba(255,255,255,.18);padding-top:15px}
@@ -64,7 +67,7 @@
     .contact footer{border-top-color:rgba(255,255,255,.16);color:#9f9397}
 
     @media(max-width:980px){.portfolio{grid-template-columns:repeat(2,1fr)}.portfolio-heading,.about-grid,.about-bottom{grid-template-columns:1fr}.portfolio-heading,.about-grid,.about-bottom{gap:28px}}
-    @media(max-width:720px){.portfolio-section{padding-top:28px}.portfolio-kicker,.about-kicker{font-size:9px;gap:14px}.portfolio-heading h2{font-size:47px}.portfolio-toolbar{align-items:flex-start;flex-direction:column;gap:10px}.portfolio-hint{display:none}.portfolio{grid-template-columns:repeat(2,1fr);gap:12px}.work{border-radius:18px}.about{padding:74px 0}.about h2{font-size:48px}.about-copy{font-size:15px}.about .quote{font-size:40px}.skill{grid-template-columns:1fr;gap:5px}.contact{padding-top:76px}}
+    @media(max-width:720px){.portfolio-section{padding-top:28px}.portfolio-kicker,.about-kicker{font-size:9px;gap:14px}.portfolio-heading h2{font-size:47px}.portfolio-toolbar{align-items:flex-start;flex-direction:column;gap:10px}.portfolio-hint{display:none}.portfolio{grid-template-columns:repeat(2,1fr);gap:12px}.work{border-radius:18px}.portfolio-more{margin-top:24px}.show-more{width:100%}.about{padding:74px 0}.about h2{font-size:48px}.about-copy{font-size:15px}.about .quote{font-size:40px}.skill{grid-template-columns:1fr;gap:5px}.contact{padding-top:76px}}
 
   
     /* About block refinement · 2026-09-20 */
@@ -176,8 +179,8 @@
     <section class="content portfolio-section" id="works"><div class="wrap portfolio-shell">
       <div class="portfolio-kicker"><span>01 / ПОРТФОЛИО</span><span>ОДЕЖДА + BEAUTY</span></div>
       <div class="section-top portfolio-heading"><div><h2>Лучше <span>покажу.</span></h2></div><p>Здесь 18 готовых роликов: примерка, talking head, voice-over, грин-скрин и тесты продукта. Под каждую задачу — своя подача, а не один шаблон на всё.</p></div>
-      <div class="portfolio-toolbar"><div class="filters" aria-label="Фильтр работ"><button class="filter active" data-filter="all" type="button">Все 18</button><button class="filter" data-filter="fashion" type="button">Одежда</button><button class="filter" data-filter="beauty" type="button">Beauty</button></div><div class="portfolio-hint">НАЖМИТЕ, ЧТОБЫ ПОСМОТРЕТЬ</div></div>
-      <div class="portfolio">
+      <div class="portfolio-toolbar"><div class="filters" aria-label="Фильтр работ"><button class="filter active" data-filter="all" type="button">Все 18</button><button class="filter" data-filter="beauty" type="button">Beauty</button><button class="filter" data-filter="fashion" type="button">Одежда</button></div><div class="portfolio-hint">НАЖМИТЕ, ЧТОБЫ ПОСМОТРЕТЬ</div></div>
+      <div class="portfolio" id="portfolioGrid">
       <div class="work" role="button" tabindex="0" aria-label="Открыть ролик 1" data-category="fashion" data-title="Купальник, который сделал мой отпуск" data-rutube="https://rutube.ru/play/embed/11673bbba278f890c9b54d10867a6b0e/?p=33XxHfUSvYtYnCoJghdLgw"><iframe class="work-preview" src="https://rutube.ru/play/embed/11673bbba278f890c9b54d10867a6b0e/?p=33XxHfUSvYtYnCoJghdLgw" title="Обложка ролика 1" loading="lazy" tabindex="-1"></iframe><span class="play">Смотреть</span></div>
       <div class="work" role="button" tabindex="0" aria-label="Открыть ролик 2" data-category="fashion" data-title="UGC-ролик 2" data-rutube="https://rutube.ru/play/embed/b9573690a0e4f4c9daa19475b8811fa5/?p=ZIauTjNIT2etjjd77uNP1w"><iframe class="work-preview" src="https://rutube.ru/play/embed/b9573690a0e4f4c9daa19475b8811fa5/?p=ZIauTjNIT2etjjd77uNP1w" title="Обложка ролика 2" loading="lazy" tabindex="-1"></iframe><span class="play">Смотреть</span></div>
       <div class="work" role="button" tabindex="0" aria-label="Открыть ролик 3" data-category="fashion" data-title="UGC-ролик 3" data-rutube="https://rutube.ru/play/embed/56f0867ddaa3c21e97cac0e303437cf9/?p=Q8AgfoBi-u3TzP86YJW62A"><iframe class="work-preview" src="https://rutube.ru/play/embed/56f0867ddaa3c21e97cac0e303437cf9/?p=Q8AgfoBi-u3TzP86YJW62A" title="Обложка ролика 3" loading="lazy" tabindex="-1"></iframe><span class="play">Смотреть</span></div>
@@ -196,7 +199,9 @@
       <div class="work" role="button" tabindex="0" aria-label="Открыть ролик 16" data-category="fashion" data-title="Я не принцесса в платье — я принцесса в кроссовках" data-rutube="https://rutube.ru/play/embed/5b86d4acf6c2f2fba4079009bd7011fd/?p=qlDqtMKFRkW8b9upnPkMVQ"><iframe class="work-preview" src="https://rutube.ru/play/embed/5b86d4acf6c2f2fba4079009bd7011fd/?p=qlDqtMKFRkW8b9upnPkMVQ" title="Обложка ролика 16" loading="lazy" tabindex="-1"></iframe><span class="play">Смотреть</span></div>
       <div class="work" role="button" tabindex="0" aria-label="Открыть ролик 17" data-category="beauty" data-title="UGC-ролик 17" data-rutube="https://rutube.ru/play/embed/dfa0292e0af6a52f954fcbb8290ee6c4/?p=DFMvGNp0ad68knwpMC5flw"><iframe class="work-preview" src="https://rutube.ru/play/embed/dfa0292e0af6a52f954fcbb8290ee6c4/?p=DFMvGNp0ad68knwpMC5flw" title="Обложка ролика 17" loading="lazy" tabindex="-1"></iframe><span class="play">Смотреть</span></div>
       <div class="work" role="button" tabindex="0" aria-label="Открыть ролик 18" data-category="beauty" data-title="UGC-ролик 18" data-rutube="https://rutube.ru/play/embed/dae9f1a028c6ba15f34b77730eb41a17/?p=ECeTQAMK4v-3R-rfkzvxoQ"><iframe class="work-preview" src="https://rutube.ru/play/embed/dae9f1a028c6ba15f34b77730eb41a17/?p=ECeTQAMK4v-3R-rfkzvxoQ" title="Обложка ролика 18" loading="lazy" tabindex="-1"></iframe><span class="play">Смотреть</span></div>
-    </div></div></section>
+      </div>
+      <div class="portfolio-more" id="portfolioMore"><button class="show-more" id="showMoreWorks" type="button" aria-controls="portfolioGrid" aria-expanded="false">Показать ещё 12</button></div>
+    </div></section>
     <section class="content about" id="about"><div class="wrap about-shell">
       <div class="about-kicker"><span>02 / ОБО МНЕ</span><span>ЧУТЬ БОЛЬШЕ, ЧЕМ В КАДРЕ</span></div>
       <div class="about-grid">
@@ -239,7 +244,7 @@
           <div class="contacts">
             <a class="contact-link" href="https://t.me/amoreun" target="_blank" rel="noopener" aria-label="Написать Юлии в Telegram"><span class="contact-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M21.8 3.2 18.6 20c-.2 1.2-.9 1.5-1.9.9l-4.9-3.6-2.4 2.3c-.3.3-.5.5-1 .5l.4-5 9.1-8.2c.4-.4-.1-.6-.6-.2L6.1 13.8 1.3 12.3c-1-.3-1.1-1 .2-1.5L20.3 3c.9-.3 1.7.2 1.5.2Z"/></svg></span><span class="contact-label"><small>Telegram</small><span>@amoreun</span></span></a>
             <a class="contact-link" href="https://www.instagram.com/amoreun" target="_blank" rel="noopener" aria-label="Открыть Instagram Юлии"><span class="contact-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7.4 2h9.2A5.4 5.4 0 0 1 22 7.4v9.2a5.4 5.4 0 0 1-5.4 5.4H7.4A5.4 5.4 0 0 1 2 16.6V7.4A5.4 5.4 0 0 1 7.4 2Zm-.2 2A3.2 3.2 0 0 0 4 7.2v9.6A3.2 3.2 0 0 0 7.2 20h9.6a3.2 3.2 0 0 0 3.2-3.2V7.2A3.2 3.2 0 0 0 16.8 4H7.2Zm10.3 1.5a1.3 1.3 0 1 1 0 2.6 1.3 1.3 0 0 1 0-2.6ZM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10Zm0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6Z"/></svg></span><span class="contact-label"><small>Instagram</small><span>@amoreun</span></span></a>
-            <a class="contact-link" href="mailto:syomkina.iu@gmail.com" aria-label="Написать Юлии по электронной почте"><span class="contact-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 4h18a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Zm0 3.2V18h18V7.2l-9 6.1-9-6.1ZM4.2 6l7.8 5.3L19.8 6H4.2Z"/></svg></span><span class="contact-label"><small>Email</small><span>syomkina.iu@gmail.com</span></span></a>
+            <a class="contact-link" href="mailto:amoreunugc@gmail.com" aria-label="Написать Юлии по электронной почте"><span class="contact-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 4h18a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Zm0 3.2V18h18V7.2l-9 6.1-9-6.1ZM4.2 6l7.8 5.3L19.8 6H4.2Z"/></svg></span><span class="contact-label"><small>Email</small><span>amoreunugc@gmail.com</span></span></a>
           </div>
         </div>
       </div>
@@ -250,11 +255,16 @@
   <script>
     const filters=[...document.querySelectorAll('.filter')];
     const works=[...document.querySelectorAll('.work')];
-    filters.forEach(btn=>btn.addEventListener('click',()=>{filters.forEach(x=>x.classList.remove('active'));btn.classList.add('active');const f=btn.dataset.filter;works.forEach(card=>{card.hidden=f!=='all'&&card.dataset.category!==f})}));
+    const moreWrap=document.getElementById('portfolioMore'),moreBtn=document.getElementById('showMoreWorks');
+    let currentFilter='all',allExpanded=false;
+    function renderWorks(){works.forEach((card,index)=>{card.hidden=currentFilter==='all'?(!allExpanded&&index>=6):card.dataset.category!==currentFilter});moreWrap.hidden=currentFilter!=='all';moreBtn.textContent=allExpanded?'Свернуть':'Показать ещё 12';moreBtn.setAttribute('aria-expanded',String(allExpanded))}
+    filters.forEach(btn=>btn.addEventListener('click',()=>{filters.forEach(x=>x.classList.remove('active'));btn.classList.add('active');currentFilter=btn.dataset.filter;renderWorks()}));
+    moreBtn.addEventListener('click',()=>{allExpanded=!allExpanded;renderWorks()});
     const modal=document.getElementById('videoModal'),video=document.getElementById('modalVideo'),rutube=document.getElementById('rutubePlayer'),title=document.getElementById('modalTitle'),closeBtn=document.getElementById('closeModal');
     function openVideo(card){title.textContent=card.dataset.title||'UGC';const rutubeUrl=card.dataset.rutube;if(rutubeUrl){video.pause();video.hidden=true;rutube.hidden=false;rutube.src=rutubeUrl+(rutubeUrl.includes('?')?'&':'?')+'autoplay=1'}else{rutube.hidden=true;video.hidden=false;video.src=new URL(card.dataset.video,document.baseURI).href;video.poster=new URL(card.dataset.poster,document.baseURI).href;video.load()}modal.classList.add('open');modal.setAttribute('aria-hidden','false');document.body.classList.add('modal-open');if(!rutubeUrl)video.play().catch(()=>{});}
     function closeVideo(){video.pause();video.removeAttribute('src');video.removeAttribute('poster');video.load();rutube.removeAttribute('src');rutube.hidden=true;video.hidden=true;modal.classList.remove('open');modal.setAttribute('aria-hidden','true');document.body.classList.remove('modal-open');}
     works.forEach(card=>{card.addEventListener('click',()=>openVideo(card));card.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openVideo(card)}})});closeBtn.addEventListener('click',closeVideo);modal.addEventListener('click',e=>{if(e.target===modal)closeVideo()});document.addEventListener('keydown',e=>{if(e.key==='Escape'&&modal.classList.contains('open'))closeVideo()});
+    renderWorks();
   </script>
 </body>
 </html>

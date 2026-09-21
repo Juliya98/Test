@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#ece9e7">
+  <meta name="description" content="UGC-портфолио Юли: fashion и beauty. Сценарий, съёмка и монтаж.">
+  <title>Юля — UGC creator · Fashion & Beauty</title>
+  <!-- UGC CLEAN BUILD v12 · real JPG assets · no base64 · no image-loader JS -->
+  <style>
+    :root{--bg:#ece9e7;--surface:#f7f4f3;--surface2:#ded7d9;--ink:#201e20;--muted:#6d676a;--accent:#735963;--line:rgba(32,30,32,.14);--white:#fffaf8;--r:24px}
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--ink);font-family:Arial,Helvetica,sans-serif;overflow-x:hidden}body.modal-open{overflow:hidden}a{color:inherit;text-decoration:none}button{font:inherit;color:inherit}img{display:block;max-width:100%}.wrap{width:min(1220px,calc(100% - 40px));margin:0 auto}.serif,h1,h2,h3,.brand-mark,.photo-tag strong{font-family:Georgia,"Times New Roman",serif}.eyebrow{font-size:11px;line-height:1.3;text-transform:uppercase;letter-spacing:.18em;color:var(--muted)}
+    header{position:sticky;top:0;z-index:50;background:rgba(236,233,231,.91);backdrop-filter:blur(14px);border-bottom:1px solid rgba(32,30,32,.08)}nav{height:68px;display:flex;align-items:center;justify-content:space-between;gap:20px}.brand{display:flex;align-items:center;gap:10px;font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase}.brand-mark{width:32px;height:32px;border:1px solid var(--ink);border-radius:50%;display:grid;place-items:center;font-size:14px}.nav-links{display:flex;align-items:center;gap:26px;font-size:12px}.nav-links a{color:#514c4f}.nav-contact{padding:9px 14px;border:1px solid var(--ink);border-radius:999px;font-size:12px}
+    .hero{padding:40px 0 20px}.hero-grid{display:grid;grid-template-columns:1.08fr .92fr;gap:56px;align-items:start}.hero-copy{padding:22px 0 0}.hero h1{font-size:clamp(50px,5.8vw,82px);font-weight:400;line-height:1.02;letter-spacing:-.04em;margin:18px 0 24px;max-width:760px}.hero h1 span{color:var(--accent)}.hero-lead{font-size:17px;line-height:1.7;color:#4e494c;max-width:620px;margin:0}.hero-points{display:flex;flex-wrap:wrap;gap:8px;margin-top:25px}.pill{border:1px solid var(--line);border-radius:999px;padding:9px 12px;font-size:11px;background:rgba(255,255,255,.2)}.hero-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:30px}.btn{min-height:46px;display:inline-flex;align-items:center;justify-content:center;padding:0 18px;border:1px solid var(--ink);border-radius:999px;font-size:12px;font-weight:700}.btn.primary{background:var(--ink);color:var(--white)}
+    .hero-photo{position:relative;aspect-ratio:2/3;width:min(100%,440px);max-height:660px;justify-self:end;border-radius:28px;overflow:hidden;background:#c8c0bd;box-shadow:0 22px 55px rgba(32,30,32,.13)}.hero-photo>img{width:100%;height:100%;display:block;object-fit:cover;object-position:center}
+    .divider{border-top:1px solid var(--line)}section.content{padding:86px 0}.section-top{display:grid;grid-template-columns:1fr .72fr;gap:35px;align-items:end;margin-bottom:42px}.section-top h2{font-size:clamp(44px,5vw,72px);line-height:1.05;letter-spacing:-.035em;font-weight:400;margin:10px 0 0}.section-top p{font-size:14px;line-height:1.75;color:var(--muted);margin:0;max-width:470px}.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px}.filter{border:1px solid var(--line);background:transparent;border-radius:999px;padding:9px 14px;font-size:11px;cursor:pointer}.filter.active{background:var(--ink);color:var(--white);border-color:var(--ink)}
+    .portfolio{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:15px}.work{position:relative;border:0;padding:0;background:#171617;border-radius:22px;overflow:hidden;aspect-ratio:9/16;cursor:pointer;text-align:left;isolation:isolate;box-shadow:0 12px 32px rgba(33,31,33,.08)}.work[hidden]{display:none}.work:focus-visible{outline:3px solid var(--accent);outline-offset:4px}.work-preview{position:absolute;inset:0;width:100%;height:100%;border:0;pointer-events:none;background:#171617;transition:transform .35s ease}.work:hover .work-preview{transform:scale(1.018)}.work:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(20,18,19,.08),transparent 23%,transparent 77%,rgba(20,18,19,.18));z-index:1;pointer-events:none}.play{position:absolute;z-index:3;right:13px;top:13px;height:38px;min-width:38px;padding:0 12px;border-radius:999px;background:rgba(247,244,243,.94);color:var(--ink);display:flex;align-items:center;justify-content:center;gap:6px;font-size:10px;font-weight:700;box-shadow:0 5px 18px rgba(0,0,0,.14);pointer-events:none}.play:before{content:"▶";font-size:9px}
+    .about{background:var(--ink);color:var(--bg)}.about-grid{display:grid;grid-template-columns:.85fr 1.15fr;gap:70px;align-items:start}.about .eyebrow{color:#aaa2a6}.about h2{font-size:clamp(48px,5.5vw,76px);line-height:1.05;letter-spacing:-.035em;font-weight:400;margin:12px 0 0}.about h2 span{color:#c0a7b1}.about-copy{font-size:16px;line-height:1.8;color:#d1cbce}.about-copy p{margin:0 0 20px}.about-copy strong{color:var(--white);font-weight:600}.quote{margin-top:36px;padding-top:22px;border-top:1px solid rgba(255,255,255,.18);font-family:Georgia,"Times New Roman",serif;font-size:25px;line-height:1.35;color:#eadfe3}
+    .formats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.format{background:var(--surface);border:1px solid var(--line);border-radius:21px;padding:24px;min-height:245px;display:flex;flex-direction:column}.format .num{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent)}.format h3{font-weight:400;font-size:28px;line-height:1.2;margin:auto 0 10px}.format p{font-size:12px;line-height:1.65;color:var(--muted);margin:0}
+    .contact{background:var(--surface2);padding:100px 0 34px}.contact-grid{display:grid;grid-template-columns:1.08fr .92fr;gap:45px;align-items:end}.contact h2{font-size:clamp(48px,5.8vw,82px);font-weight:400;line-height:1.02;letter-spacing:-.04em;margin:12px 0 0}.contact-side p{font-size:15px;line-height:1.75;color:var(--muted);margin:0 0 22px;max-width:470px}.contacts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.contact-link{min-height:52px;display:inline-flex;align-items:center;gap:10px;padding:10px 14px;border:1px solid var(--ink);border-radius:16px;font-size:12px;font-weight:700}.contact-icon{width:30px;height:30px;flex:0 0 auto;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.09)}.contact-icon svg{width:16px;height:16px;display:block;fill:currentColor}.contact-label{min-width:0}.contact-label small{display:block;margin-bottom:2px;font-size:8px;line-height:1.1;letter-spacing:.13em;text-transform:uppercase;opacity:.62}.contact-label span{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}footer{margin-top:85px;padding-top:20px;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:20px;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+    .modal{position:fixed;inset:0;z-index:100;background:rgba(18,17,18,.86);backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;padding:18px}.modal.open{display:flex}.modal-card{width:min(460px,100%);max-height:94vh;background:#171617;border-radius:24px;overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,.38)}.modal-top{height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 15px;color:white;border-bottom:1px solid rgba(255,255,255,.1)}.modal-top strong{font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-right:12px}.close{border:1px solid rgba(255,255,255,.24);background:transparent;color:white;border-radius:999px;padding:7px 10px;font-size:10px;cursor:pointer}.modal video,.modal iframe{display:block;width:100%;max-height:calc(94vh - 52px);background:#000;aspect-ratio:9/16;object-fit:contain;border:0}.modal iframe[hidden],.modal video[hidden]{display:none}
+    @media(max-width:980px){.hero-grid,.section-top,.about-grid,.contact-grid{grid-template-columns:1fr}.hero-copy{padding-top:0}.hero-photo{width:min(100%,620px);max-height:none;justify-self:start}.portfolio{grid-template-columns:repeat(3,1fr)}.formats-grid{grid-template-columns:repeat(2,1fr)}.about-grid{gap:35px}.contacts{grid-template-columns:1fr}}
+    @media(max-width:720px){.wrap{width:min(100% - 28px,1220px)}nav{height:62px}.nav-links{display:none}.brand{font-size:11px}.hero{padding:31px 0 28px}.hero h1{font-size:46px}.hero-lead{font-size:16px}.hero-photo{border-radius:22px}section.content{padding:70px 0}.section-top h2{font-size:45px}.portfolio{grid-template-columns:repeat(2,1fr);gap:10px}.work{border-radius:16px}.work-copy{left:12px;right:12px;bottom:12px}.work-copy h3{font-size:18px}.work-copy p{display:none}.play{top:10px;right:10px;height:32px;min-width:32px;padding:0 9px;font-size:9px}.about h2,.contact h2{font-size:46px}.about-copy{font-size:16px}.formats-grid{grid-template-columns:1fr}.format{min-height:210px}footer{margin-top:60px;flex-direction:column;gap:8px}.contact{padding-top:75px}}
+    @media(max-width:420px){.hero h1{font-size:40px}.work-copy h3{font-size:16px}}
+  
+    /* GitHub visual update · 2026-09-20 */
+    section.content.portfolio-section{background:var(--surface);padding-top:12px}
+    .portfolio-shell{border-top:1px solid var(--line);padding-top:10px}
+    .portfolio-kicker,.about-kicker{display:flex;justify-content:space-between;gap:24px;font-size:10px;letter-spacing:.17em;text-transform:uppercase;color:var(--muted);margin-bottom:24px}
+    .portfolio-heading{grid-template-columns:1fr .86fr;margin-bottom:28px}
+    .portfolio-heading h2{font-size:clamp(54px,6.2vw,88px);line-height:.98;letter-spacing:-.045em;margin:0}
+    .portfolio-heading h2 span{font-style:italic;color:var(--accent)}
+    .portfolio-heading p{font-size:15px;line-height:1.8;max-width:520px}
+    .portfolio-toolbar{display:flex;justify-content:space-between;align-items:center;gap:24px;border-bottom:1px solid var(--line);padding-bottom:17px;margin-bottom:28px}
+    .portfolio-toolbar .filters{margin:0;gap:5px}
+    .portfolio-toolbar .filter{border:0;border-radius:0;padding:11px 14px;font-size:13px}
+    .portfolio-toolbar .filter.active{background:var(--ink);color:var(--white)}
+    .portfolio-hint{font-size:10px;letter-spacing:.17em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
+    .portfolio{grid-template-columns:repeat(3,minmax(0,1fr));gap:22px}
+    .work{border-radius:26px}
+    .portfolio-more{display:flex;justify-content:center;margin-top:32px}.portfolio-more[hidden]{display:none}
+    .show-more{min-width:220px;min-height:48px;border:1px solid var(--ink);border-radius:999px;background:transparent;color:var(--ink);padding:0 22px;font-size:12px;font-weight:700;cursor:pointer;transition:background .2s ease,color .2s ease}
+    .show-more:hover,.show-more:focus-visible{background:var(--ink);color:var(--white)}
+
+    .about{padding:96px 0;background:#171416;color:#f7f1f3}
+    .about-shell{border-top:1px solid rgba(255,255,255,.18);padding-top:15px}
+    .about-kicker{color:#b8adb1;margin-bottom:34px}
+    .about-grid{grid-template-columns:.92fr 1.08fr;gap:76px}
+    .about h2{font-size:clamp(56px,6.4vw,92px);line-height:.98;letter-spacing:-.045em;margin:0}
+    .about h2 span{color:#caa4b3}
+    .about-copy{font-size:17px;line-height:1.82;color:#d4c9cd}
+    .about-copy p{margin:0 0 19px}
+    .about-bottom{display:grid;grid-template-columns:.86fr 1.14fr;gap:76px;margin-top:34px;padding-top:28px;border-top:1px solid rgba(255,255,255,.18)}
+    .about .quote{margin:0;padding:0;border:0;font-size:clamp(40px,4vw,66px);line-height:1;font-style:italic;color:#caa4b3}
+    .skills{display:grid;gap:16px}
+    .skill{display:grid;grid-template-columns:150px 1fr;gap:22px;font-size:14px;line-height:1.7;color:#d4c9cd}
+    .skill b{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:#fff}
+
+    .contact{background:#171416;color:#f7f1f3;padding:98px 0 34px}
+    .contact .eyebrow{color:#aca0a4}
+    .contact h2 span{color:#caa4b3}
+    .contact-side p{color:#d0c5c9}
+    .contact-extra{font-size:13px;line-height:1.6;color:#e1d5d9;margin:0 0 20px}
+    .contacts{gap:10px}
+    .contact-link{border-color:rgba(255,255,255,.38);color:#f7f1f3}
+    .contact-link:hover{background:#f7f1f3;color:#171416}
+    .contact footer{border-top-color:rgba(255,255,255,.16);color:#9f9397}
+
+    @media(max-width:980px){.portfolio{grid-template-columns:repeat(2,1fr)}.portfolio-heading,.about-grid,.about-bottom{grid-template-columns:1fr}.portfolio-heading,.about-grid,.about-bottom{gap:28px}}
+    @media(max-width:720px){section.content.portfolio-section{padding-top:16px}.portfolio-kicker,.about-kicker{font-size:9px;gap:14px}.portfolio-heading h2{font-size:47px}.portfolio-toolbar{align-items:flex-start;flex-direction:column;gap:10px}.portfolio-hint{display:none}.portfolio{grid-template-columns:repeat(2,1fr);gap:12px}.work{border-radius:18px}.portfolio-more{margin-top:24px}.show-more{width:100%}.about{padding:74px 0}.about h2{font-size:48px}.about-copy{font-size:16px}.about .quote{font-size:40px}.skill{grid-template-columns:1fr;gap:5px}.contact{padding-top:76px}}
+
+  
+    /* About block refinement · 2026-09-20 */
+    .about-bottom{
+      grid-template-columns:.78fr 1.22fr;
+      gap:34px;
+      align-items:stretch;
+      margin-top:38px;
+      padding-top:28px;
+    }
+    .quote-block{
+      min-height:220px;
+      border:1px solid rgba(255,255,255,.16);
+      border-radius:24px;
+      padding:26px 28px 24px;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      background:rgba(255,255,255,.025);
+    }
+    .quote-mark{
+      font-family:Georgia,"Times New Roman",serif;
+      font-size:58px;
+      line-height:.7;
+      color:#caa4b3;
+      opacity:.95;
+    }
+    .about .quote{
+      margin:14px 0 16px;
+      padding:0;
+      border:0;
+      font-size:clamp(34px,3.35vw,52px);
+      line-height:1.03;
+      letter-spacing:-.035em;
+      font-style:italic;
+      color:#d3a8b8;
+    }
+    .quote-note{
+      max-width:360px;
+      font-size:12px;
+      line-height:1.65;
+      color:#a99da1;
+    }
+    .skill-cards{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:14px;
+    }
+    .skill-card{
+      min-height:220px;
+      border:1px solid rgba(255,255,255,.16);
+      border-radius:24px;
+      padding:22px 20px 21px;
+      background:rgba(255,255,255,.025);
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+    }
+    .skill-card-top{
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+    .skill-num{
+      width:30px;
+      height:30px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.22);
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      flex:0 0 auto;
+      font-size:9px;
+      letter-spacing:.08em;
+      color:#caa4b3;
+    }
+    .skill-card b{
+      font-size:10px;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+      color:#fff;
+    }
+    .skill-card p{
+      margin:26px 0 0;
+      font-size:14px;
+      line-height:1.65;
+      color:#d4c9cd;
+    }
+    @media(max-width:1100px){
+      .about-bottom{grid-template-columns:1fr}
+      .quote-block{min-height:190px}
+    }
+    @media(max-width:760px){
+      .skill-cards{grid-template-columns:1fr}
+      .quote-block,.skill-card{min-height:auto}
+      .quote-block{padding:22px}
+      .skill-card{padding:20px}
+      .about .quote{font-size:38px}
+      .quote-note{max-width:none}
+    }
+
+  </style>
+</head>
+<body>
+  <header><div class="wrap"><nav><a class="brand" href="#top"><span class="brand-mark">Ю</span><span>YULIA / UGC</span></a><div class="nav-links"><a href="#works">Ролики</a><a href="#about">Обо мне</a><a href="#formats">Как работаю</a></div><a class="nav-contact" href="#contact">Написать</a></nav></div></header>
+  <main id="top">
+    <section class="hero"><div class="wrap hero-grid"><div class="hero-copy"><div class="eyebrow">UGC creator · fashion & beauty</div><h1>Снимаю то, что<br>сама хочу<br>увидеть <span>перед<br>покупкой.</span></h1><p class="hero-lead">Создаю UGC для fashion- и beauty-брендов: нахожу понятную идею, пишу живой сценарий и собираю ролик от съёмки до финального монтажа.</p><div class="hero-points"><span class="pill">идея → готовый ролик</span><span class="pill">работа по ТЗ</span><span class="pill">живой текст</span><span class="pill">правки</span><span class="pill">AI-инструменты</span></div><div class="hero-actions"><a class="btn primary" href="#works">Смотреть ролики ↓</a><a class="btn" href="#contact">Обсудить задачу</a></div></div><div class="hero-photo"><img src="./assets/images/hero-yulia-cover.jpg" alt="Юлия — QA, UGC и life" width="1025" height="1535" fetchpriority="high"></div></div></section>
+    <div class="divider"></div>
+    <section class="content portfolio-section" id="works"><div class="wrap portfolio-shell">
+      <div class="portfolio-kicker"><span>01 / ПОРТФОЛИО</span><span>BEAUTY + ОДЕЖДА</span></div>
+      <div class="section-top portfolio-heading"><div><h2>Лучше <span>покажу.</span></h2></div><p>18 готовых работ в двух направлениях. Здесь можно оценить подачу, работу в кадре и монтаж — нажмите на обложку, чтобы открыть ролик.</p></div>
+      <div class="portfolio-toolbar"><div class="filters" aria-label="Фильтр работ"><button class="filter active" data-filter="all" type="button">Все 18</button><button class="filter" data-filter="beauty" type="button">Beauty 14</button><button class="filter" data-filter="fashion" type="button">Одежда 4</button></div><div class="portfolio-hint">НАЖМИТЕ, ЧТОБЫ ПОСМОТРЕТЬ</div></div>
+      <div class="portfolio" id="portfolioGrid">
+      <div class="work" role="button" tabindex="0" aria-label="Открыть ролик 1" data-category="fashion" data-title="Купальник, который сделал мой отпуск" data-rutube="https://rutube.ru/play/embed/11673bbba278f890c9b54d10867a6b0e/?p=33XxHfUSvYtYnCoJghdLgw"><iframe class="work-preview" src="https://rutube.ru/play/embed/11673bbba278f890c9b54d10867a6b0e/?p=33XxHfUSvYtYnCoJghdLgw" title="Обложка ролика 1" loading="lazy" tabindex="-1"></iframe><span class="play">Смотреть</span></div>
+      <div class="work" role="button" tabindex="0" aria-label="Открыть ролик 2" data-category="beauty" data-title="Что делать с неравномерным загаром после отпуска" data-rutube="https://rutube.ru/play/embed/b9573690a0e4f4c9daa19475b8811fa5/?p=ZIauTjNIT2etjjd77uNP1w"><iframe class="work-preview" src="https://rutube.ru/play/embed/b9573690a0e4f4c9daa19475b8811fa5/?p=ZIauTjNIT2etjjd77uNP1w" title="Обложка ролика 2" loading="lazy" tabindex="-1"></iframe><span class="play">Смотреть</span></div>
+      <div class="work" role="button" tabindex="0" aria-label="Открыть ролик 3" data-category="beauty" data-title="UGC-ролик 3" data-rutube="https://rutube.ru/play/embed/56f0867ddaa3c21e97cac0e303437cf9/?p=Q8AgfoBi-u3TzP86YJW62A"><iframe class="work-preview" src="https://rutube.ru/play/embed/56f0867ddaa3c21e97cac0e303437cf9/?p=Q8AgfoBi-u3TzP86YJW62A" title="Обложка ролика 3" loading="lazy" tabindex="-1"></iframe><span class="play">Смотреть</span></div>
+      <div class="work" role="button" tabindex="0" aria-label="Открыть ролик 4" data-category="beauty" data-title="UGC-ролик 4" data-rutube="https://rutube.ru/play/embed/cbad7d1f2b4adcdf75e29c921c308741/?p=C0FlKo0wAOYf9dzasLTCbg"><iframe class="work-preview" src="https://rutube.ru/play/embed/cbad7d1f2b4adcdf75e29c921c308741/?p=C0FlKo0wAOYf9dzasLTCbg" title="Обложка ролика 4" loading="lazy" tabindex="-1"></iframe><span class="play">Смотреть</span></div>
+      <div class="work" role="button" tabindex="0" aria-label="Открыть ролик 5" data-category="beauty" data-title="Отпуск закончился — следы загара остались" data-rutube="https://rutube.ru/play/embed/5180bb1913e6b9772c95f10f1e8ca6e8/"><iframe class="work-preview" src="https://rutube.ru/play/embed/5180bb1913e6b9772c95f10f1e8ca6e8/" title="Обложка ролика 5" loading="lazy" tabindex="-1"></iframe><span class="play">Смотреть</span></div>
+      <div class="work" role="button" tabindex="0" aria-label="Открыть ролик 6" data-category="beauty" data-title="3 вещи, которые я делаю ради гладких ног" data-rutube="https://rutube.ru/play/embed/17fd373148246abc58d1d5091e5ed22e/?p=eE3deMrVFoolAgVlloYFJw"><iframe class="work-preview" src="https://rutube.ru/play/embed/17fd373148246abc58d1d5091e5ed22e/?p=eE3deMrVFoolAgVlloYFJw" title="Обложка ролика 6" loading="lazy" tabindex="-1"></iframe><span class="play">Смотреть</span></div>
+      <div class="work" role="button" tabindex="0" aria-label="Открыть ролик 7" data-category="beauty" data-title="5 привычек для более свежего лица утром" data-rutube="https://rutube.ru/play/embed/2f17308fbf25bb1d5735ccb474fbe911/?p=p5Dxt2GIG0vt4d2sfKWZLg"><iframe class="work-preview" src="https://rutube.ru/play/embed/2f17308fbf25bb1d5735ccb474fbe911/?p=p5Dxt2GIG0vt4d2sfKWZLg" title="Обложка ролика 7" loading="lazy" tabindex="-1"></iframe><span class="play">Смотреть</span></div>
+      <div class="work" role="button" tabindex="0" aria-label="Открыть ролик 8" data-category="beauty" data-title="Как выбрать хорошую пилинг-варежку" data-rutube="https://rutube.ru/play/embed/93f77c92b99a576ad383d976c2b2f9a5/?p=0wKU6qGaRo3g_2z6CkBLsA"><iframe class="work-preview" src="https://rutube.ru/play/embed/93f77c92b99a576ad383d976c2b2f9a5/?p=0wKU6qGaRo3g_2z6CkBLsA" title="Обложка ролика 8" loading="lazy" tabindex="-1"></iframe><span class="play">Смотреть</span></div>
+      <div class="work" role="button" tabindex="0" aria-label="Открыть ролик 9" data-category="beauty" data-title="UGC-ролик 9" data-rutube="https://rutube.ru/play/embed/74ed696e0627be66785208f4677a3215/?p=coz9ElknynJRfpCOij-u-w"><iframe class="work-preview" src="https://rutube.ru/play/embed/74ed696e0627be66785208f4677a3215/?p=coz9ElknynJRfpCOij-u-w" title="Обложка ролика 9" loading="lazy" tabindex="-1"></iframe><span class="play">Смотреть</span></div>
+      <div class="work" role="button" tabindex="0" aria-label="Открыть ролик 10" data-category="beauty" data-title="UGC-ролик 10" data-rutube="https://rutube.ru/play/embed/75d8e7695852f53c80202b844a68b47d/?p=1rLqhwBKqO3v08dHHrHUfw"><iframe class="work-preview" src="https://rutube.ru/play/embed/75d8e7695852f53c80202b844a68b47d/?p=1rLqhwBKqO3v08dHHrHUfw" title="Обложка ролика 10" loading="lazy" tabindex="-1"></iframe><span class="play">Смотреть</span></div>
+      <div class="work" role="button" tabindex="0" aria-label="Открыть ролик 11" data-category="beauty" data-title="Густые волосы: красиво, но не всегда просто" data-rutube="https://rutube.ru/play/embed/49e6276d48e15d35fd7a4eca228787a1/?p=EiYHTXuKbhGdZ_opjRw-Tw"><iframe class="work-preview" src="https://rutube.ru/play/embed/49e6276d48e15d35fd7a4eca228787a1/?p=EiYHTXuKbhGdZ_opjRw-Tw" title="Обложка ролика 11" loading="lazy" tabindex="-1"></iframe><span class="play">Смотреть</span></div>
+      <div class="work" role="button" tabindex="0" aria-label="Открыть ролик 12" data-category="fashion" data-title="2 топа — 6 образов" data-rutube="https://rutube.ru/play/embed/bf528f5560319bbca8332fe2846a9130/?p=6u28n6z58cBN6Yhs0poR6Q"><iframe class="work-preview" src="https://rutube.ru/play/embed/bf528f5560319bbca8332fe2846a9130/?p=6u28n6z58cBN6Yhs0poR6Q" title="Обложка ролика 12" loading="lazy" tabindex="-1"></iframe><span class="play">Смотреть</span></div>
+      <div class="work" role="button" tabindex="0" aria-label="Открыть ролик 13" data-category="beauty" data-title="Почему я перестала ждать, пока кожа сама придёт в норму" data-rutube="https://rutube.ru/play/embed/f1113309330d92ccf324afc1acadbdac/?p=kjbHgijY45DEwLFDABARSQ"><iframe class="work-preview" src="https://rutube.ru/play/embed/f1113309330d92ccf324afc1acadbdac/?p=kjbHgijY45DEwLFDABARSQ" title="Обложка ролика 13" loading="lazy" tabindex="-1"></iframe><span class="play">Смотреть</span></div>
+      <div class="work" role="button" tabindex="0" aria-label="Открыть ролик 14" data-category="beauty" data-title="UGC-ролик 14" data-rutube="https://rutube.ru/play/embed/297e7fcb9e56d4cfbb11487f30a20c34/?p=2WszvBf0gFEphQHsXWgPBg"><iframe class="work-preview" src="https://rutube.ru/play/embed/297e7fcb9e56d4cfbb11487f30a20c34/?p=2WszvBf0gFEphQHsXWgPBg" title="Обложка ролика 14" loading="lazy" tabindex="-1"></iframe><span class="play">Смотреть</span></div>
+      <div class="work" role="button" tabindex="0" aria-label="Открыть ролик 15" data-category="fashion" data-title="Попросила ИИ собрать мне образ" data-rutube="https://rutube.ru/play/embed/9828cde524b1b0261eb19ab522201d8f/?p=udRqinuJ8rY-y6FYyDX15g"><iframe class="work-preview" src="https://rutube.ru/play/embed/9828cde524b1b0261eb19ab522201d8f/?p=udRqinuJ8rY-y6FYyDX15g" title="Обложка ролика 15" loading="lazy" tabindex="-1"></iframe><span class="play">Смотреть</span></div>
+      <div class="work" role="button" tabindex="0" aria-label="Открыть ролик 16" data-category="fashion" data-title="Я не принцесса в платье — я принцесса в кроссовках" data-rutube="https://rutube.ru/play/embed/5b86d4acf6c2f2fba4079009bd7011fd/?p=qlDqtMKFRkW8b9upnPkMVQ"><iframe class="work-preview" src="https://rutube.ru/play/embed/5b86d4acf6c2f2fba4079009bd7011fd/?p=qlDqtMKFRkW8b9upnPkMVQ" title="Обложка ролика 16" loading="lazy" tabindex="-1"></iframe><span class="play">Смотреть</span></div>
+      <div class="work" role="button" tabindex="0" aria-label="Открыть ролик 17" data-category="beauty" data-title="UGC-ролик 17" data-rutube="https://rutube.ru/play/embed/dfa0292e0af6a52f954fcbb8290ee6c4/?p=DFMvGNp0ad68knwpMC5flw"><iframe class="work-preview" src="https://rutube.ru/play/embed/dfa0292e0af6a52f954fcbb8290ee6c4/?p=DFMvGNp0ad68knwpMC5flw" title="Обложка ролика 17" loading="lazy" tabindex="-1"></iframe><span class="play">Смотреть</span></div>
+      <div class="work" role="button" tabindex="0" aria-label="Открыть ролик 18" data-category="beauty" data-title="UGC-ролик 18" data-rutube="https://rutube.ru/play/embed/dae9f1a028c6ba15f34b77730eb41a17/?p=ECeTQAMK4v-3R-rfkzvxoQ"><iframe class="work-preview" src="https://rutube.ru/play/embed/dae9f1a028c6ba15f34b77730eb41a17/?p=ECeTQAMK4v-3R-rfkzvxoQ" title="Обложка ролика 18" loading="lazy" tabindex="-1"></iframe><span class="play">Смотреть</span></div>
+      </div>
+      <div class="portfolio-more" id="portfolioMore"><button class="show-more" id="showMoreWorks" type="button" aria-controls="portfolioGrid" aria-expanded="false">Показать ещё 12</button></div>
+    </div></section>
+    <section class="content about" id="about"><div class="wrap about-shell">
+      <div class="about-kicker"><span>02 / ОБО МНЕ</span><span>UGC-КРЕАТОР С СИСТЕМНЫМ ПОДХОДОМ</span></div>
+      <div class="about-grid">
+        <div><h2>Я Юля.<br>UGC-креатор<br>и <span>QA.</span></h2></div>
+        <div class="about-copy">
+          <p>Работаю в нишах <strong>fashion и beauty</strong> и создаю ролики под задачу бренда: могу снять по готовому ТЗ или собрать идею и сценарий с нуля.</p>
+          <p>Опыт QA помогает мне видеть ролик как систему: проверить, все ли смыслы из брифа попали в кадр, понятна ли логика, заметен ли продукт и ничего ли не потерялось по пути от сценария к монтажу.</p>
+          <p>Снимаю talking head, примерки, демонстрации, voice-over, green screen и B-roll. В монтаже работаю с темпом, субтитрами и визуальными акцентами; для идей и отдельных вставок подключаю AI.</p>
+          <p>Для меня важен не просто красивый кадр, а чтобы зритель за несколько секунд понял, что за продукт, кому он нужен и как работает.</p>
+        </div>
+      </div>
+      <div class="about-bottom">
+        <div class="quote-block">
+          <div class="quote-mark">“</div>
+          <div class="quote">Я так не говорю</div>
+          <div class="quote-note">Адаптирую рекламный текст под живую речь, сохраняя обязательные смыслы бренда.</div>
+        </div>
+        <div class="skill-cards">
+          <article class="skill-card">
+            <div class="skill-card-top"><span class="skill-num">01</span><b>Полный цикл</b></div>
+            <p>Идея, хук, сценарий, съёмка, монтаж и согласованные правки.</p>
+          </article>
+          <article class="skill-card">
+            <div class="skill-card-top"><span class="skill-num">02</span><b>Форматы</b></div>
+            <p>Talking head · voice-over · примерка · демонстрация · green screen · B-roll.</p>
+          </article>
+          <article class="skill-card">
+            <div class="skill-card-top"><span class="skill-num">03</span><b>Инструменты</b></div>
+            <p>CapCut · Canva · ChatGPT · Claude · Kling.</p>
+          </article>
+        </div>
+      </div>
+    </div></section>
+    <section class="content" id="formats"><div class="wrap"><div class="section-top"><div><div class="eyebrow">Как проходит работа</div><h2>От задачи до готового ролика.</h2></div><p>Можно прийти с подробным ТЗ или только с продуктом и целью — объём моей работы подстроим под задачу.</p></div><div class="formats-grid"><article class="format"><div class="num">01 / задача и сценарий</div><h3>Фиксируем главную мысль</h3><p>Уточняю аудиторию и цель, предлагаю хук и структуру. До съёмки согласовываем текст и план кадров.</p></article><article class="format"><div class="num">02 / съёмка</div><h3>Собираю нужные кадры</h3><p>Снимаю основную сцену и B-roll так, чтобы продукт появился вовремя, а его особенности были понятны без лишних объяснений.</p></article><article class="format"><div class="num">03 / готовый материал</div><h3>Собираю и передаю ролик</h3><p>Настраиваю темп, добавляю субтитры, музыку и акценты. После просмотра вношу согласованные правки.</p></article></div></div></section>
+    <section class="contact" id="contact"><div class="wrap">
+      <div class="contact-grid">
+        <div><div class="eyebrow">КОНТАКТЫ</div><h2>Есть задача?<br><span>Давайте обсудим.</span></h2></div>
+        <div class="contact-side">
+          <p>Можно прислать ТЗ, ссылку на продукт или коротко описать, что нужно. Отвечу и предложу формат.</p>
+          <div class="contact-extra">Екатеринбург · сотрудничаю с брендами и агентствами удалённо.</div>
+          <div class="contacts">
+            <a class="contact-link" href="https://t.me/amoreun" target="_blank" rel="noopener" aria-label="Написать Юлии в Telegram"><span class="contact-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M21.8 3.2 18.6 20c-.2 1.2-.9 1.5-1.9.9l-4.9-3.6-2.4 2.3c-.3.3-.5.5-1 .5l.4-5 9.1-8.2c.4-.4-.1-.6-.6-.2L6.1 13.8 1.3 12.3c-1-.3-1.1-1 .2-1.5L20.3 3c.9-.3 1.7.2 1.5.2Z"/></svg></span><span class="contact-label"><small>Telegram</small><span>@amoreun</span></span></a>
+            <a class="contact-link" href="https://www.instagram.com/amoreun" target="_blank" rel="noopener" aria-label="Открыть Instagram Юлии"><span class="contact-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7.4 2h9.2A5.4 5.4 0 0 1 22 7.4v9.2a5.4 5.4 0 0 1-5.4 5.4H7.4A5.4 5.4 0 0 1 2 16.6V7.4A5.4 5.4 0 0 1 7.4 2Zm-.2 2A3.2 3.2 0 0 0 4 7.2v9.6A3.2 3.2 0 0 0 7.2 20h9.6a3.2 3.2 0 0 0 3.2-3.2V7.2A3.2 3.2 0 0 0 16.8 4H7.2Zm10.3 1.5a1.3 1.3 0 1 1 0 2.6 1.3 1.3 0 0 1 0-2.6ZM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10Zm0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6Z"/></svg></span><span class="contact-label"><small>Instagram</small><span>@amoreun</span></span></a>
+            <a class="contact-link" href="mailto:amoreunugc@gmail.com" aria-label="Написать Юлии по электронной почте"><span class="contact-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 4h18a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Zm0 3.2V18h18V7.2l-9 6.1-9-6.1ZM4.2 6l7.8 5.3L19.8 6H4.2Z"/></svg></span><span class="contact-label"><small>Email</small><span>amoreunugc@gmail.com</span></span></a>
+          </div>
+        </div>
+      </div>
+      <footer><span>© 2026 YULIA / UGC</span><span>Fashion & Beauty · Екатеринбург</span></footer>
+    </div></section>
+  </main>
+  <div class="modal" id="videoModal" role="dialog" aria-modal="true" aria-hidden="true" aria-label="Просмотр ролика"><div class="modal-card"><div class="modal-top"><strong id="modalTitle">UGC</strong><button class="close" id="closeModal" type="button">Закрыть ✕</button></div><iframe id="rutubePlayer" title="Rutube-плеер" allow="clipboard-write; autoplay" allowfullscreen hidden></iframe><video id="modalVideo" controls playsinline preload="metadata" hidden></video></div></div>
+  <script>
+    const filters=[...document.querySelectorAll('.filter')];
+    const works=[...document.querySelectorAll('.work')];
+    const moreWrap=document.getElementById('portfolioMore'),moreBtn=document.getElementById('showMoreWorks');
+    let currentFilter='all';
+    const expandedFilters={all:false,beauty:false};
+    function renderWorks(){const matching=works.filter(card=>currentFilter==='all'||card.dataset.category===currentFilter);const canExpand=matching.length>6&&currentFilter!=='fashion';const isExpanded=canExpand&&expandedFilters[currentFilter];works.forEach(card=>{const position=matching.indexOf(card);card.hidden=position===-1||(!isExpanded&&position>=6)});moreWrap.hidden=!canExpand;if(canExpand){moreBtn.textContent=isExpanded?'Свернуть':`Показать ещё ${matching.length-6}`;moreBtn.setAttribute('aria-expanded',String(isExpanded))}}
+    filters.forEach(btn=>btn.addEventListener('click',()=>{filters.forEach(x=>x.classList.remove('active'));btn.classList.add('active');currentFilter=btn.dataset.filter;renderWorks()}));
+    moreBtn.addEventListener('click',()=>{expandedFilters[currentFilter]=!expandedFilters[currentFilter];renderWorks()});
+    const modal=document.getElementById('videoModal'),video=document.getElementById('modalVideo'),rutube=document.getElementById('rutubePlayer'),title=document.getElementById('modalTitle'),closeBtn=document.getElementById('closeModal');
+    function openVideo(card){title.textContent=card.dataset.title||'UGC';const rutubeUrl=card.dataset.rutube;if(rutubeUrl){video.pause();video.hidden=true;rutube.hidden=false;rutube.src=rutubeUrl+(rutubeUrl.includes('?')?'&':'?')+'autoplay=1'}else{rutube.hidden=true;video.hidden=false;video.src=new URL(card.dataset.video,document.baseURI).href;video.poster=new URL(card.dataset.poster,document.baseURI).href;video.load()}modal.classList.add('open');modal.setAttribute('aria-hidden','false');document.body.classList.add('modal-open');if(!rutubeUrl)video.play().catch(()=>{});}
+    function closeVideo(){video.pause();video.removeAttribute('src');video.removeAttribute('poster');video.load();rutube.removeAttribute('src');rutube.hidden=true;video.hidden=true;modal.classList.remove('open');modal.setAttribute('aria-hidden','true');document.body.classList.remove('modal-open');}
+    works.forEach(card=>{card.addEventListener('click',()=>openVideo(card));card.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openVideo(card)}})});closeBtn.addEventListener('click',closeVideo);modal.addEventListener('click',e=>{if(e.target===modal)closeVideo()});document.addEventListener('keydown',e=>{if(e.key==='Escape'&&modal.classList.contains('open'))closeVideo()});
+    renderWorks();
+  </script>
+</body>
+</html>

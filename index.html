@@ -38,7 +38,7 @@
     .portfolio-hint{font-size:10px;letter-spacing:.17em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
     .portfolio{grid-template-columns:repeat(3,minmax(0,1fr));gap:22px}
     .work{border-radius:26px}
-    .portfolio-more{display:flex;justify-content:center;margin-top:32px}
+    .portfolio-more{display:flex;justify-content:center;margin-top:32px}.portfolio-more[hidden]{display:none}
     .show-more{min-width:220px;min-height:48px;border:1px solid var(--ink);border-radius:999px;background:transparent;color:var(--ink);padding:0 22px;font-size:12px;font-weight:700;cursor:pointer;transition:background .2s ease,color .2s ease}
     .show-more:hover,.show-more:focus-visible{background:var(--ink);color:var(--white)}
 
@@ -257,10 +257,11 @@
     const filters=[...document.querySelectorAll('.filter')];
     const works=[...document.querySelectorAll('.work')];
     const moreWrap=document.getElementById('portfolioMore'),moreBtn=document.getElementById('showMoreWorks');
-    let currentFilter='all',allExpanded=false;
-    function renderWorks(){works.forEach((card,index)=>{card.hidden=currentFilter==='all'?(!allExpanded&&index>=6):card.dataset.category!==currentFilter});moreWrap.hidden=currentFilter!=='all';moreBtn.textContent=allExpanded?'Свернуть':'Показать ещё 12';moreBtn.setAttribute('aria-expanded',String(allExpanded))}
+    let currentFilter='all';
+    const expandedFilters={all:false,beauty:false};
+    function renderWorks(){const matching=works.filter(card=>currentFilter==='all'||card.dataset.category===currentFilter);const canExpand=matching.length>6&&currentFilter!=='fashion';const isExpanded=canExpand&&expandedFilters[currentFilter];works.forEach(card=>{const position=matching.indexOf(card);card.hidden=position===-1||(!isExpanded&&position>=6)});moreWrap.hidden=!canExpand;if(canExpand){moreBtn.textContent=isExpanded?'Свернуть':`Показать ещё ${matching.length-6}`;moreBtn.setAttribute('aria-expanded',String(isExpanded))}}
     filters.forEach(btn=>btn.addEventListener('click',()=>{filters.forEach(x=>x.classList.remove('active'));btn.classList.add('active');currentFilter=btn.dataset.filter;renderWorks()}));
-    moreBtn.addEventListener('click',()=>{allExpanded=!allExpanded;renderWorks()});
+    moreBtn.addEventListener('click',()=>{expandedFilters[currentFilter]=!expandedFilters[currentFilter];renderWorks()});
     const modal=document.getElementById('videoModal'),video=document.getElementById('modalVideo'),rutube=document.getElementById('rutubePlayer'),title=document.getElementById('modalTitle'),closeBtn=document.getElementById('closeModal');
     function openVideo(card){title.textContent=card.dataset.title||'UGC';const rutubeUrl=card.dataset.rutube;if(rutubeUrl){video.pause();video.hidden=true;rutube.hidden=false;rutube.src=rutubeUrl+(rutubeUrl.includes('?')?'&':'?')+'autoplay=1'}else{rutube.hidden=true;video.hidden=false;video.src=new URL(card.dataset.video,document.baseURI).href;video.poster=new URL(card.dataset.poster,document.baseURI).href;video.load()}modal.classList.add('open');modal.setAttribute('aria-hidden','false');document.body.classList.add('modal-open');if(!rutubeUrl)video.play().catch(()=>{});}
     function closeVideo(){video.pause();video.removeAttribute('src');video.removeAttribute('poster');video.load();rutube.removeAttribute('src');rutube.hidden=true;video.hidden=true;modal.classList.remove('open');modal.setAttribute('aria-hidden','true');document.body.classList.remove('modal-open');}

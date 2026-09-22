@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://amoreun.netlify.app/sitemap.xml
+Sitemap: https://amoreun.ru/sitemap.xml

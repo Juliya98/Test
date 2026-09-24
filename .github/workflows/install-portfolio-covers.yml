@@ -43,55 +43,20 @@ jobs:
             "https://cdn.openart.ai/openart-uploads/production/attachment-transfers/5ab8a5f1cdb9f4477ab7afb8b367389aafc5f06d6b60d469a80ea75ed84e2d86.webp"
             "https://cdn.openart.ai/openart-uploads/production/attachment-transfers/fd72f6b015e27d0380fb159993c3e41456755c5bf78340c749cb93e63bdcf288.webp"
           )
+
           for i in $(seq 1 18); do
             printf -v nn "%02d" "$i"
             tmp="assets/images/covers/work-${nn}.webp.tmp"
             dest="assets/images/covers/work-${nn}.webp"
             curl --fail --location --silent --show-error --retry 3 --retry-delay 2 "${urls[$((i-1))]}" --output "$tmp"
-            python3 - "$tmp" <<'PY'
-import pathlib, sys
-p = pathlib.Path(sys.argv[1])
-b = p.read_bytes()
-if len(b) < 50000:
-    raise SystemExit(f"Downloaded image is unexpectedly small: {len(b)} bytes")
-if b[:4] != b"RIFF" or b[8:12] != b"WEBP":
-    raise SystemExit("Downloaded file is not a valid WebP container")
-PY
+            size=$(stat -c%s "$tmp")
+            test "$size" -gt 50000
+            test "$(head -c 4 "$tmp")" = "RIFF"
+            test "$(dd if="$tmp" bs=1 skip=8 count=4 status=none)" = "WEBP"
             mv "$tmp" "$dest"
           done
+
           rm -f assets/images/covers/work-*.png
-
-      - name: Point portfolio cards to local covers
-        shell: bash
-        run: |
-          python3 - <<'PY'
-from pathlib import Path
-import re
-
-path = Path("index.html")
-html = path.read_text(encoding="utf-8")
-
-for n in range(1, 19):
-    pattern = re.compile(r'<img class="work-preview"[^>]*alt="Обложка ролика %d"[^>]*>' % n)
-    m = pattern.search(html)
-    if not m:
-        raise SystemExit(f"Cover img tag not found for work {n}")
-    tag = m.group(0)
-    src = f'./assets/images/covers/work-{n:02d}.webp'
-    tag = re.sub(r'\ssrc="[^"]+"', f' src="{src}"', tag, count=1)
-    tag = re.sub(r'\sdata-custom-src="[^"]+"', '', tag)
-    tag = re.sub(r'\swidth="[^"]+"', ' width="480"', tag)
-    tag = re.sub(r'\sheight="[^"]+"', ' height="853"', tag)
-    if n <= 3:
-        tag = re.sub(r'\sloading="[^"]+"', ' loading="eager"', tag)
-        tag = re.sub(r'\sfetchpriority="[^"]+"', ' fetchpriority="high"', tag)
-    else:
-        tag = re.sub(r'\sloading="[^"]+"', ' loading="lazy"', tag)
-        tag = re.sub(r'\sfetchpriority="[^"]+"', ' fetchpriority="low"', tag)
-    html = html[:m.start()] + tag + html[m.end():]
-
-path.write_text(html, encoding="utf-8")
-PY
 
       - name: Commit covers
         shell: bash
@@ -99,6 +64,6 @@ PY
           set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -A assets/images/covers index.html
+          git add -A assets/images/covers
           git commit -m "Replace portfolio covers with optimized WebP images"
           git push origin HEAD:main
